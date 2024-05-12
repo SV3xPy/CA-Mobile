@@ -47,12 +47,12 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   void storeUserData() async {
     String name = nameController.text.trim();
     String lastName = lastNameController.text.trim();
-    String birthDay = birthDayController.text.trim();
+    //String birthDay = birthDayController.text.trim();
     String? birthDate = selectedDate?.toString();
     if (name.isNotEmpty) {
       ref
           .read(authControllerProvider)
-          .saveUserDataToFirebase(context, name, image, lastName, birthDay);
+          .saveUserDataToFirebase(context, name, image, lastName, birthDate!);
     }
   }
 

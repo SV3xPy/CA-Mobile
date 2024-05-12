@@ -97,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       navigateToSignupScreen(context);
                     },
                     child: const Text(
-                      "¡Regístrate aquí!",
+                      " ¡Regístrate aquí!",
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
