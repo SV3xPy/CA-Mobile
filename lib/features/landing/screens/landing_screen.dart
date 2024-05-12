@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/widgets/custom_button.dart';
+import 'package:ca_mobile/features/auth/screens/login_screen.dart';
+
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
   void navigateToLoginScreen(BuildContext context) {
-    //Navigator.pushNamed(context, );
+    Navigator.pushNamed(context, LoginScreen.routeName);
   }
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class LandingScreen extends StatelessWidget {
                 height: 50,
               ),
               const Text(
-                'Bienvenido a CargaAcademica Mobile',
+                'Bienvenido a CalenAcademic',
                 style: TextStyle(
                   fontSize: 27,
                   fontWeight: FontWeight.w600,
