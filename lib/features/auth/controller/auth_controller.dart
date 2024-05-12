@@ -3,6 +3,8 @@ import 'package:ca_mobile/features/auth/repository/auth_repository.dart';
 import 'package:ca_mobile/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 final authControllerProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
@@ -29,12 +31,20 @@ class AuthController {
 
   Future<bool> signUpWithEmail(
       BuildContext context, String email, String password) {
-    return authRepository.signUpEmail(context, email, password);
+    String encodedPassword = _hashPassword(password);
+    return authRepository.signUpEmail(context, email, encodedPassword);
   }
 
   Future<bool> signInWithEmail(
       BuildContext context, String email, String password) {
-    return authRepository.signInUser(context, password: password, email: email);
+    String encodedPassword = _hashPassword(password);
+    return authRepository.signInUser(context, password: encodedPassword, email: email);
+  }
+
+  String _hashPassword(String password) {
+    var bytes = utf8.encode(password); // Convierte la contraseña a bytes
+    var hash = sha256.convert(bytes); // Calcula el hash SHA-256
+    return hash.toString(); // Retorna el hash como String
   }
 
   Future<bool> userVerifiedEmail() {
