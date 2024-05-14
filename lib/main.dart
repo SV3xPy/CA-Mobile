@@ -2,7 +2,7 @@ import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/widgets/error.dart';
 import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:ca_mobile/features/landing/screens/landing_screen.dart';
+import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:ca_mobile/router.dart';
 import 'package:ca_mobile/screens/mobile_layout_screen.dart';
 import 'package:flutter/material.dart';
