@@ -1,3 +1,4 @@
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/features/auth/screens/ressetpassword_screen.dart';
 import 'package:ca_mobile/features/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/widgets/custom_button.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:ca_mobile/screens/mobile_layout_screen.dart';
+import 'package:ca_mobile/screens/home_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
@@ -34,8 +35,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     Navigator.pushNamed(context, ResetPasswordScreen.routeName);
   }
 
-  @override 
-  Widget build(BuildContext context){
+  @override
+  Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 height: 10,
               ),
               TextFormField(
-                controller:  passwordController,
+                controller: passwordController,
                 keyboardType: TextInputType.text,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -77,7 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 height: 8.0,
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   navigateToResetPasswordScreen(context);
                 },
                 child: const Text(
@@ -91,9 +92,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text ("¿No tienes cuenta?"),
+                  const Text("¿No tienes cuenta?"),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       navigateToSignupScreen(context);
                     },
                     child: const Text(
@@ -106,21 +107,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               SizedBox(
                 height: size.height * 0.5,
               ),
-              CustomButton(text: 'INGRESAR', onPressed: (){
-                ref
-                    .read(authControllerProvider)
-                    .signInWithEmail(context, emailController.text, passwordController.text,).then((value) {
-                      if(value){
-                        Navigator.pushNamed(context, MobileLayoutScreen.routeName);
-                      }else{
+              CustomButton(
+                text: 'INGRESAR',
+                onPressed: () {
+                  ref
+                      .read(authControllerProvider)
+                      .signInWithEmail(
+                        context,
+                        emailController.text,
+                        passwordController.text,
+                      )
+                      .then(
+                    (value) {
+                      if (value) {
+                        Navigator.pushNamed(
+                            context, BottomNavigation.routeName);
+                      } else {
                         print("Error al iniciar sesion.");
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('No se encontró el usuario. Cree una cuenta nueva.',),),
+                          const SnackBar(
+                            content: Text(
+                              'No se encontró el usuario. Cree una cuenta nueva.',
+                            ),
+                          ),
                         );
                       }
                     },
-                    );
-              },
+                  );
+                },
               ),
             ],
           ),

@@ -1,10 +1,10 @@
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/error.dart';
 import 'package:ca_mobile/features/auth/screens/login_screen.dart';
 import 'package:ca_mobile/features/auth/screens/ressetpassword_screen.dart';
 import 'package:ca_mobile/features/auth/screens/signup_screen.dart';
 import 'package:ca_mobile/features/auth/screens/user_information_screen.dart';
 import 'package:ca_mobile/features/auth/screens/verifying_screen.dart';
-import 'package:ca_mobile/screens/mobile_layout_screen.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -13,9 +13,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       );
-    case MobileLayoutScreen.routeName:
+    case BottomNavigation.routeName:
       return MaterialPageRoute(
-        builder: (context) => const MobileLayoutScreen(),
+        builder: (context) => const BottomNavigation(),
       );
     case SignupScreen.routeName:
       return MaterialPageRoute(
