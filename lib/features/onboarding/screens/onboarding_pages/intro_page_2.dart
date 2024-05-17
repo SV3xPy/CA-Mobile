@@ -26,8 +26,7 @@ class IntroPage2 extends StatelessWidget {
           ),
           Transform.scale(
             scale: 1.2,
-            child: LottieBuilder.network(
-                'https://lottie.host/7898d740-a5cb-435e-b708-980ac6cd6881/P7WTCd23By.json'),
+            child: LottieBuilder.asset("assets/person_checklist.json"),
           ),
           const SizedBox(
             height: 130,

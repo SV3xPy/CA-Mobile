@@ -1,13 +1,13 @@
+import 'package:ca_mobile/features/auth/screens/options_screen.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_pages/intro_page_1.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_pages/intro_page_2.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_pages/intro_page_3.dart';
 import 'package:flutter/material.dart';
-import 'package:ca_mobile/colors.dart';
-import 'package:ca_mobile/common/widgets/custom_button.dart';
 import 'package:ca_mobile/features/auth/screens/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class LandingScreen extends StatefulWidget {
+  static const routeName = '/onboarding';
   const LandingScreen({super.key});
 
   @override
@@ -18,8 +18,8 @@ class _LandingScreenState extends State<LandingScreen> {
   PageController _controller = PageController();
   bool lastPage = false;
 
-  void navigateToLoginScreen(BuildContext context) {
-    Navigator.pushNamed(context, LoginScreen.routeName);
+  void navigateToOptionsScreen(BuildContext context) {
+    Navigator.pushNamed(context, OptionsScreen.routeName);
   }
 
   @override
@@ -70,7 +70,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 lastPage
                     ? GestureDetector(
                         onTap: () {
-                          navigateToLoginScreen(context);
+                          navigateToOptionsScreen(context);
                         },
                         child: const Text(
                           "Done",

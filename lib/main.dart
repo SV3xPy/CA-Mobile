@@ -1,10 +1,12 @@
 import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/error.dart';
 import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:ca_mobile/router.dart';
 import 'package:ca_mobile/screens/home_screen.dart';
+import 'package:ca_mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ca_mobile/firebase_options.dart';
@@ -24,51 +26,53 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
       ),
     );
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'CA_Mobile',
-        theme: ThemeData(
-          primaryColor: const Color(
+      debugShowCheckedModeBanner: false,
+      title: 'CA_Mobile',
+      theme: ThemeData(
+        primaryColor: const Color(
+          0xFF202328,
+        ),
+        colorScheme: const ColorScheme(
+          brightness: Brightness.light,
+          primary: Color(
             0xFF202328,
           ),
-          colorScheme: const ColorScheme(
-            brightness: Brightness.light,
-            primary: Color(
-              0xFF202328,
-            ),
-            onPrimary: Colors.black,
-            secondary: Colors.transparent,
-            onSecondary: Colors.black,
-            error: Colors.red,
-            onError: Colors.white,
-            background: Color(
-              0xFF12171D,
-            ),
-            onBackground: Colors.black,
-            surface: Colors.white,
-            onSurface: Colors.black,
-          ),
-          hintColor: const Color(0xFF63CF93),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          onPrimary: Colors.black,
+          secondary: Colors.transparent,
+          onSecondary: Colors.black,
+          error: Colors.red,
+          onError: Colors.white,
+          background: Colors.white,
+          // background: Color(
+          //   0xFF12171D,
+          // ),
+          onBackground: Colors.black,
+          surface: Colors.white,
+          onSurface: Colors.black,
         ),
-        onGenerateRoute: (settings) => generateRoute(settings),
-        home: ref.watch(userDataAuthProvider).when(
-              data: (user) {
-                if (user == null) {
-                  return const LandingScreen();
-                }
-                return const HomeScreen();
-              },
-              error: (err, trace) {
-                return ErrorScreen(
-                  error: err.toString(),
-                );
-              },
-              loading: () => const Loader(),
-            ));
+        hintColor: const Color(0xFF63CF93),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      onGenerateRoute: (settings) => generateRoute(settings),
+      home: ref.watch(userDataAuthProvider).when(
+            data: (user) {
+              if (user == null) {
+                return const WelcomeScreen();
+              }
+              return const BottomNavigation();
+            },
+            error: (err, trace) {
+              return ErrorScreen(
+                error: err.toString(),
+              );
+            },
+            loading: () => const Loader(),
+          ),
+    );
   }
 }

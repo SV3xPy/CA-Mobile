@@ -26,8 +26,7 @@ class IntroPage1 extends StatelessWidget {
           ),
           Transform.scale(
             scale: 1.2,
-            child: LottieBuilder.network(
-                'https://lottie.host/31d5380c-29f9-41d8-b1fe-65d80a556ce0/yuRNVjyNOA.json'),
+            child: LottieBuilder.asset("assets/clock_alarm.json"),
           ),
           const SizedBox(
             height: 80,
