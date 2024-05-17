@@ -1,4 +1,3 @@
-import 'package:ca_mobile/features/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class OptionsButton extends StatelessWidget {

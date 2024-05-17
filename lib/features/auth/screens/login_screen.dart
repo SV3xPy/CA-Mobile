@@ -1,14 +1,10 @@
 import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/custom_scaffold.dart';
-import 'package:ca_mobile/common/widgets/options_buttons.dart';
 import 'package:ca_mobile/features/auth/screens/ressetpassword_screen.dart';
 import 'package:ca_mobile/features/auth/screens/signup_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:ca_mobile/common/widgets/custom_button.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {

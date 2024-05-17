@@ -1,11 +1,8 @@
-import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/error.dart';
 import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:ca_mobile/router.dart';
-import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:ca_mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
