@@ -1,4 +1,3 @@
-import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

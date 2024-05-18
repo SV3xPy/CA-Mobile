@@ -1,20 +1,30 @@
 import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
+import 'package:ca_mobile/features/auth/screens/login_screen.dart';
 import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:ca_mobile/screens/schedule_screen.dart';
+import 'package:ca_mobile/screens/settings_screen.dart';
 import 'package:ca_mobile/screens/subjects_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class BottomNavigation extends StatefulWidget {
+enum Options {
+  ajustes,
+  logout,
+}
+
+class BottomNavigation extends ConsumerStatefulWidget {
   static const routeName = '/main';
   const BottomNavigation({super.key});
 
   @override
-  State<BottomNavigation> createState() => _BottomNavigationState();
+  ConsumerState<BottomNavigation> createState() => _BottomNavigationState();
 }
 
-class _BottomNavigationState extends State<BottomNavigation> {
+class _BottomNavigationState extends ConsumerState<BottomNavigation>
+    with WidgetsBindingObserver {
   int _selectedTab = 0;
   late Widget _currentPage;
   late HomeScreen _homeScreen;
@@ -34,6 +44,47 @@ class _BottomNavigationState extends State<BottomNavigation> {
       _subjectsScreen,
     ];
     _currentPage = _homeScreen;
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  PopupMenuItem _buildPopupMenuItem(
+      String title, IconData iconData, int position) {
+    return PopupMenuItem(
+      value: position,
+      child: Row(
+        children: [
+          Icon(
+            iconData,
+            color: Colors.grey,
+          ),
+          Text(title),
+        ],
+      ),
+    );
+  }
+
+  _onMenuItemSelected(int popupMenuItemIndex) {
+    if (popupMenuItemIndex == Options.ajustes.index) {
+      Navigator.pushNamed(
+        context,
+        SettingsScreen.routeName,
+      );
+    } else if (popupMenuItemIndex == Options.logout.index) {
+      ref.read(authControllerProvider).signOut();
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -64,12 +115,22 @@ class _BottomNavigationState extends State<BottomNavigation> {
           ],
         ),
         actions: [
-          GestureDetector(
-            onTap: () {},
-            child: const CircleAvatar(
-              radius: 25.0,
-              backgroundImage: AssetImage(""),
-            ),
+          PopupMenuButton(
+            onSelected: (value) {
+              _onMenuItemSelected(value);
+            },
+            itemBuilder: (context) => [
+              _buildPopupMenuItem(
+                "Ajustes",
+                Icons.settings,
+                Options.ajustes.index,
+              ),
+              _buildPopupMenuItem(
+                "Salir",
+                Icons.logout,
+                Options.logout.index,
+              ),
+            ],
           ),
         ],
       ),

@@ -3,7 +3,6 @@ import 'package:ca_mobile/features/onboarding/screens/onboarding_pages/intro_pag
 import 'package:ca_mobile/features/onboarding/screens/onboarding_pages/intro_page_2.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_pages/intro_page_3.dart';
 import 'package:flutter/material.dart';
-import 'package:ca_mobile/features/auth/screens/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -15,8 +14,14 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
   bool lastPage = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   void navigateToOptionsScreen(BuildContext context) {
     Navigator.pushNamed(context, OptionsScreen.routeName);
@@ -24,7 +29,6 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
