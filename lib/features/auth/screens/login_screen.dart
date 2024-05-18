@@ -280,14 +280,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              ref
+                                .read(authControllerProvider)
+                                .singUpWithFacebook(context)
+                                .then((value) {
+                                  if(value){
+                                    Navigator.pushNamed(context, BottomNavigation.routeName);
+                                  }else{
+                                    print('error al iniciar sesion');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'No se encontró el usuario. Cree una cuenta nueva.',
+                                      ),
+                                    ),
+                                  );
+                                  }
+                                });
+                            },
                             child: Brand(
                               Brands.facebook,
                               size: 40,
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                                ref
+                                .read(authControllerProvider)
+                                .singUpWithGithub(context)
+                                .then((value) {
+                                  if(value){
+                                    Navigator.pushNamed(context, BottomNavigation.routeName);
+                                  }else{
+                                    print('error al iniciar sesion');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'No se encontró el usuario. Cree una cuenta nueva.',
+                                      ),
+                                    ),
+                                  );
+                                  }
+                                });
+                            },
                             child: Brand(
                               Brands.github,
                               size: 40,
