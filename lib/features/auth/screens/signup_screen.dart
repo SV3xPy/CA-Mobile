@@ -136,8 +136,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           ],
                         ),
                         decoration: InputDecoration(
-                          label: const Text('Password'),
-                          hintText: 'Enter Password',
+                          label: const Text('Contraseña'),
+                          hintText: 'Ingresar contraseña',
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),

@@ -163,6 +163,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ],
                           ),
                           GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                ResetPasswordScreen.routeName,
+                              );
+                            },
                             child: const Text(
                               "Olvidé mi contraseña",
                               style: TextStyle(
@@ -291,6 +297,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             },
                             child: const Text(
                               " ¡Regístrate!",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           )
                         ],
