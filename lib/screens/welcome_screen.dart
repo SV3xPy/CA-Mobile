@@ -23,9 +23,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Container(
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFF9CAEA9),
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(50.0),
                   bottomRight: Radius.circular(50.0),
                 ),

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:ca_mobile/screens/mobile_layout_screen.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -260,22 +259,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           GestureDetector(
                             onTap: () {
                               ref
-                                .read(authControllerProvider)
-                                .signUpWithGoogle(context)
-                                .then((value) {
-                               if (value) {
-                                Navigator.pushNamed(context, MobileLayoutScreen.routeName);
-                               } else {
-                                print("Error al iniciar sesion.");
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'No se encontró el usuario. Cree una cuenta nueva.',
+                                  .read(authControllerProvider)
+                                  .signUpWithGoogle(context)
+                                  .then((value) {
+                                if (value) {
+                                  Navigator.pushNamed(
+                                      context, BottomNavigation.routeName);
+                                } else {
+                                  print("Error al iniciar sesion.");
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'No se encontró el usuario. Cree una cuenta nueva.',
                                       ),
-                                     ),
-                                    );
-                                   }
-                                 });
+                                    ),
+                                  );
+                                }
+                              });
                             },
                             child: Brand(
                               Brands.google,
