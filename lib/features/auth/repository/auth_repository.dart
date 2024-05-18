@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/models/user_model.dart';
 import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -171,7 +172,7 @@ class AuthRepository {
             (value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
+                builder: (context) => const BottomNavigation(),
               ),
               (route) => false,
             ),
