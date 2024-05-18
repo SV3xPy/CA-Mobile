@@ -34,6 +34,9 @@ class AuthController {
     String encodedPassword = _hashPassword(password);
     return authRepository.signUpEmail(context, email, encodedPassword);
   }
+  Future<bool> signUpWithGoogle(BuildContext context){
+    return authRepository.signUpGoogle(context);
+  }
 
   Future<bool> signInWithEmail(
       BuildContext context, String email, String password) {

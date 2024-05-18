@@ -66,6 +66,25 @@ class AuthRepository {
     }
   }
 
+  Future<bool> signUpGoogle(BuildContext context) async {
+    try {
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+      final userCredential = await auth.signInWithProvider(_googleAuthProvider);
+      if (userCredential.user != null) {
+        if(userCredential.additionalUserInfo!.isNewUser){
+          userCredential.user!.sendEmailVerification();
+        }
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, content: e.message!);
+      }
+      return false;
+    }
+  }
+
   Future<bool> signInUser(BuildContext context,
       {required String password, required String email}) async {
     try {
