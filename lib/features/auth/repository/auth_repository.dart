@@ -72,7 +72,47 @@ class AuthRepository {
       GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
       final userCredential = await auth.signInWithProvider(_googleAuthProvider);
       if (userCredential.user != null) {
-        if(userCredential.additionalUserInfo!.isNewUser){
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          userCredential.user!.sendEmailVerification();
+        }
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, content: e.message!);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> signUpFacebook(BuildContext context) async {
+    try {
+      FacebookAuthProvider _facebookAuthProvider = FacebookAuthProvider();
+      final userCredential =
+          await auth.signInWithProvider(_facebookAuthProvider);
+      if (userCredential.user != null) {
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          userCredential.user!.sendEmailVerification();
+        }
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, content: e.message!);
+      }
+      return false;
+    }
+  }
+
+    Future<bool> signUpGithub(BuildContext context) async {
+    try {
+      GithubAuthProvider _githubAuthProvider = GithubAuthProvider();
+      final userCredential =
+          await auth.signInWithProvider(_githubAuthProvider);
+      if (userCredential.user != null) {
+        if (userCredential.additionalUserInfo!.isNewUser) {
           userCredential.user!.sendEmailVerification();
         }
         return true;
