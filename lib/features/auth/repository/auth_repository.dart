@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/models/user_model.dart';
-import 'package:ca_mobile/screens/mobile_layout_screen.dart';
+import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -114,22 +115,45 @@ class AuthRepository {
     return false;
   }
 
-  Future<bool> deleteUserAccount() async {
+  Future<void> sendVerificationMail() async {
     final user = auth.currentUser;
+    if (user != null) {
+      try {
+        await user.sendEmailVerification();
+      } catch (e) {
+        if (e.toString().contains('too-many-requests')) {
+          throw Exception('Demasiadas solicitudes. Intenta más tarde.');
+        } else {
+          throw Exception('Error al enviar el correo de verificación: $e');
+        }
+      }
+    }
+  }
+
+  Future<void> deleteUserAccount() async {
+    final user = auth.currentUser;
+    // if (user != null) {
+    //   try {
+    //     await user.delete();
+    //     await user.reload();
+    //     print("Cuenta eliminada con éxito.");
+    //     return true;
+    //   } on FirebaseAuthException catch (e) {
+    //     print("Error al eliminar la cuenta: ${e.message}");
+    //   }
+    // } else {
+    //   print("No hay usuario autenticado.");
+    //   return false;
+    // }
+    // return false;
     if (user != null) {
       try {
         await user.delete();
         await user.reload();
-        print("Cuenta eliminada con éxito.");
-        return true;
       } on FirebaseAuthException catch (e) {
         print("Error al eliminar la cuenta: ${e.message}");
       }
-    } else {
-      print("No hay usuario autenticado.");
-      return false;
     }
-    return false;
   }
 
   void saveUserData({
@@ -167,7 +191,7 @@ class AuthRepository {
             (value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const MobileLayoutScreen(),
+                builder: (context) => const BottomNavigation(),
               ),
               (route) => false,
             ),

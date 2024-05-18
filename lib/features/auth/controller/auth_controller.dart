@@ -41,7 +41,8 @@ class AuthController {
   Future<bool> signInWithEmail(
       BuildContext context, String email, String password) {
     String encodedPassword = _hashPassword(password);
-    return authRepository.signInUser(context, password: encodedPassword, email: email);
+    return authRepository.signInUser(context,
+        password: encodedPassword, email: email);
   }
 
   String _hashPassword(String password) {
@@ -54,8 +55,12 @@ class AuthController {
     return authRepository.isEmailVerified();
   }
 
-  Future<bool> deleteUser() {
-    return authRepository.deleteUserAccount();
+  Future<void> sendVerificationMail() async {
+    authRepository.sendVerificationMail();
+  }
+
+  Future<void> deleteUser() async {
+    await authRepository.deleteUserAccount();
   }
 
   void saveUserDataToFirebase(BuildContext context, String name,
