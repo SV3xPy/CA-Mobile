@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:ca_mobile/common/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -145,7 +144,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return CustomScaffold(
       child: Column(
         children: [
