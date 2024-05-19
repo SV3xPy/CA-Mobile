@@ -1,21 +1,42 @@
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/widgets/countdown_painter.dart';
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/alert_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class RecentAlerts extends StatefulWidget {
+class RecentAlerts extends ConsumerStatefulWidget {
   const RecentAlerts({super.key});
 
   @override
-  State<RecentAlerts> createState() => _RecentAlertsState();
+  ConsumerState<RecentAlerts> createState() => _RecentAlertsState();
 }
 
-class _RecentAlertsState extends State<RecentAlerts> {
+class _RecentAlertsState extends ConsumerState<RecentAlerts>
+    with WidgetsBindingObserver {
   DateFormat dateFormat = DateFormat("hh:mm a");
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final tSwitchProvider = ref.watch(themeSwitchProvider);
+    Color? alertDown =
+        tSwitchProvider ? const Color(0xFFF5C35A) : const Color(0xffBB342F);
+    Color? alertUp =
+        tSwitchProvider ? const Color(0xFFFA8334) : const Color(0xFF119822);
     return ListView.builder(
       shrinkWrap: true,
       itemCount: recentAlerts.length,
@@ -24,8 +45,9 @@ class _RecentAlertsState extends State<RecentAlerts> {
         int index,
       ) {
         Alert alert = recentAlerts[index];
-        int hoursLeft = DateTime.now().difference(alert.time).inHours;
-        hoursLeft = hoursLeft < 0 ? hoursLeft : 0;
+        //int hoursLeft = DateTime.now().difference(alert.time).inHours;
+        int hoursLeft = alert.time.difference(DateTime.now()).inHours;
+        hoursLeft = hoursLeft > 0 ? hoursLeft : 0;
         double percent = hoursLeft / 48;
         return Row(
           children: <Widget>[
@@ -36,7 +58,9 @@ class _RecentAlertsState extends State<RecentAlerts> {
               height: 130.0,
               width: 15.0,
               decoration: BoxDecoration(
-                color: Theme.of(context).hintColor,
+                color: tSwitchProvider
+                    ? const Color(0xFF63CF93)
+                    : const Color(0xFF9c306c),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(
                     30.0,
@@ -60,9 +84,11 @@ class _RecentAlertsState extends State<RecentAlerts> {
                 ),
                 height: 130.0,
                 width: 326.0,
-                decoration: const BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: tSwitchProvider
+                      ? const Color(0xFF282B30)
+                      : const Color(0xffd7d4cf),
+                  borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(
                       12.0,
                     ),
@@ -78,8 +104,9 @@ class _RecentAlertsState extends State<RecentAlerts> {
                       children: <Widget>[
                         Text(
                           alert.title,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color:
+                                tSwitchProvider ? Colors.white : Colors.black,
                             fontSize: 18.0,
                           ),
                         ),
@@ -87,7 +114,9 @@ class _RecentAlertsState extends State<RecentAlerts> {
                           children: <Widget>[
                             Icon(
                               Icons.access_time,
-                              color: Theme.of(context).hintColor,
+                              color: tSwitchProvider
+                                  ? const Color(0xFF63CF93)
+                                  : const Color(0xFF9c306c),
                               size: 17.0,
                             ),
                             const SizedBox(
@@ -109,7 +138,9 @@ class _RecentAlertsState extends State<RecentAlerts> {
                           children: <Widget>[
                             Icon(
                               Icons.bookmark,
-                              color: Theme.of(context).hintColor,
+                              color: tSwitchProvider
+                                  ? const Color(0xFF63CF93)
+                                  : const Color(0xFF9c306c),
                               size: 17.0,
                             ),
                             const SizedBox(
@@ -131,7 +162,8 @@ class _RecentAlertsState extends State<RecentAlerts> {
                       child: CustomPaint(
                         foregroundPainter: CountdownPainter(
                           bgColor: bgColor,
-                          lineColor: _getColor(context, percent),
+                          lineColor:
+                              _getColor(context, percent, alertUp, alertDown),
                           percent: percent,
                           width: 4.0,
                         ),
@@ -141,8 +173,10 @@ class _RecentAlertsState extends State<RecentAlerts> {
                             children: <Widget>[
                               Text(
                                 "$hoursLeft",
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: tSwitchProvider
+                                      ? Colors.white
+                                      : Colors.black,
                                   fontSize: 26.0,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -150,7 +184,8 @@ class _RecentAlertsState extends State<RecentAlerts> {
                               Text(
                                 "hours left",
                                 style: TextStyle(
-                                  color: _getColor(context, percent),
+                                  color: _getColor(
+                                      context, percent, alertUp, alertDown),
                                   fontSize: 13.0,
                                 ),
                               )
@@ -169,10 +204,10 @@ class _RecentAlertsState extends State<RecentAlerts> {
     );
   }
 
-  _getColor(BuildContext context, double percent) {
+  _getColor(BuildContext context, double percent, Color? up, Color? down) {
     if (percent >= 0.35) {
-      return Theme.of(context).hintColor;
+      return up;
     }
-    return hourColor;
+    return down;
   }
 }

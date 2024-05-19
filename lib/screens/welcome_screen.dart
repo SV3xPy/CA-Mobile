@@ -1,4 +1,3 @@
-import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -102,8 +101,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   padding: const EdgeInsets.only(
                     left: 30.0,
                   ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).hintColor,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF63CF93),
                   ),
                   child: const Row(
                     children: <Widget>[

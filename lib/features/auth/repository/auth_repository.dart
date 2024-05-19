@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/models/user_model.dart';
-import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class AuthRepository {
       GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
       final userCredential = await auth.signInWithProvider(_googleAuthProvider);
       if (userCredential.user != null) {
-        if(userCredential.additionalUserInfo!.isNewUser){
+        if (userCredential.additionalUserInfo!.isNewUser) {
           userCredential.user!.sendEmailVerification();
         }
         return true;

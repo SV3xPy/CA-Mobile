@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:ca_mobile/common/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -145,7 +144,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return CustomScaffold(
       child: Column(
         children: [
@@ -232,26 +230,26 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                                 errorText: "Por favor, ingresa tu nombre."),
                           ],
                         ),
-                        decoration: InputDecoration(
-                          label: const Text(
+                        decoration: const InputDecoration(
+                          label: Text(
                             "Nombre",
                           ),
                           hintText: "Ingresa tu nombre",
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -267,26 +265,26 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                                 errorText: "Por favor, ingresa tu apellido."),
                           ],
                         ),
-                        decoration: InputDecoration(
-                          label: const Text(
+                        decoration: const InputDecoration(
+                          label: Text(
                             "Apellido",
                           ),
                           hintText: "Ingresa tu apellido",
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -303,19 +301,19 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                           ],
                         ),
                         onTap: () => _selectDate(context),
-                        decoration: InputDecoration(
-                          icon: const Icon(Icons.calendar_today),
-                          label: const Text("Fecha de Nacimiento"),
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.calendar_today),
+                          label: Text("Fecha de Nacimiento"),
                           hintText: "Selecciona tu fecha de nacimiento",
-                          hintStyle: const TextStyle(color: Colors.black26),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          hintStyle: TextStyle(color: Colors.black26),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(color: Colors.black12),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(color: Colors.black12),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(

@@ -3,10 +3,7 @@ import 'dart:async';
 import 'package:ca_mobile/common/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ca_mobile/colors.dart';
-import 'package:ca_mobile/common/widgets/custom_button.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class ResetPasswordScreen extends ConsumerStatefulWidget {
   static const String routeName = '/reset-password';
@@ -117,18 +114,18 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12,
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12,
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(

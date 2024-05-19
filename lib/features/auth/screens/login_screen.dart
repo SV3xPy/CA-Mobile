@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
@@ -39,7 +38,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return CustomScaffold(
       child: Column(
         children: [
@@ -96,18 +94,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12,
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12,
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -125,18 +123,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12,
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12,
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
