@@ -1,4 +1,5 @@
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
+import 'package:ca_mobile/screens/calendar_screen.dart';
 import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:ca_mobile/screens/schedule_screen.dart';
 import 'package:ca_mobile/screens/settings_screen.dart';
@@ -20,13 +21,14 @@ class BottomNavigation extends ConsumerStatefulWidget {
 }
 
 class _BottomNavigationState extends ConsumerState<BottomNavigation>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   int _selectedTab = 0;
   late Widget _currentPage;
   late HomeScreen _homeScreen;
   late SubjectsScreen _subjectsScreen;
   late ScheduleScreen _scheduleScreen;
   late List<Widget> _pages;
+  late TabController tabBarController;
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
       _subjectsScreen,
     ];
     _currentPage = _homeScreen;
+    tabBarController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -77,49 +80,73 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        title: Row(
-          children: [
-            SvgPicture.asset(
-              "assets/grad_cap.png",
-              height: 28.8,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Text(
-              "EduAgenda",
-              style: TextStyle(
-                color: tSwitchProvider ? Colors.white : Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: false,
+          title: Row(
+            children: [
+              SvgPicture.asset(
+                "assets/grad_cap.png",
+                height: 28.8,
               ),
-            ),
-          ],
-        ),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              _onMenuItemSelected(value);
-            },
-            itemBuilder: (context) => [
-              _buildPopupMenuItem(
-                "Ajustes",
-                Icons.settings,
-                Options.ajustes.index,
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                "EduAgenda",
+                style: TextStyle(
+                  color: tSwitchProvider ? Colors.white : Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
-        ],
-      ),
-      body: Stack(
-        children: <Widget>[
-          _currentPage,
-          _bottomNavigator(),
-        ],
+          actions: [
+            PopupMenuButton(
+              onSelected: (value) {
+                _onMenuItemSelected(value);
+              },
+              itemBuilder: (context) => [
+                _buildPopupMenuItem(
+                  "Ajustes",
+                  Icons.settings,
+                  Options.ajustes.index,
+                ),
+              ],
+            ),
+          ],
+          bottom: _currentPage == _scheduleScreen
+              ? TabBar(
+                  controller: tabBarController,
+                  tabs: const [
+                    Tab(
+                      text: "Horario",
+                    ),
+                    Tab(
+                      text: "Calendario",
+                    ),
+                  ],
+                )
+              : null,
+        ),
+        body: Stack(
+          children: <Widget>[
+            _currentPage == _scheduleScreen
+                ? TabBarView(
+                    controller: tabBarController,
+                    children: const [
+                      ScheduleScreen(),
+                      CalendarScreen(),
+                    ],
+                  )
+                : _currentPage,
+            _bottomNavigator(),
+          ],
+        ),
       ),
     );
   }

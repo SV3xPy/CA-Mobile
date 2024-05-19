@@ -1,6 +1,6 @@
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
-import 'package:ca_mobile/models/event.dart';
+import 'package:ca_mobile/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,12 +34,12 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
     final tSwitchProvider = ref.watch(themeSwitchProvider);
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: recentEvents.length,
+      itemCount: 2, //recentEvents.length,
       itemBuilder: (
         BuildContext context,
         int index,
       ) {
-        Event event = recentEvents[index];
+        //Event event = recentEvents[index];
         return Row(
           children: <Widget>[
             Expanded(
@@ -71,7 +71,8 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          event.title,
+                          //event.title,
+                          "",
                           style: TextStyle(
                             color:
                                 tSwitchProvider ? Colors.white : Colors.black,
@@ -95,7 +96,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                               width: 10.0,
                             ),
                             Text(
-                              "${DateTime.now().weekday == event.dueTime.weekday ? "Hoy" : DateFormat.EEEE().format(event.dueTime)}, ${dateFormat.format(event.dueTime)}",
+                              "", //,${DateTime.now().weekday == event.dueTime.weekday ? "Hoy" : DateFormat.EEEE().format(event.dueTime)}, ${dateFormat.format(event.dueTime)}",
                               style: const TextStyle(
                                 color: txtColor,
                                 fontSize: 16.0,
@@ -106,7 +107,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                         ),
                       ],
                     ),
-                    _todoButton(event, tSwitchProvider)
+                    //_todoButton(event, tSwitchProvider)
                   ],
                 ),
               ),
@@ -121,7 +122,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          event.isDone = !event.isDone;
+          //event.isDone = !event.isDone;
         });
       },
       style: ButtonStyle(

@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class ScheduleScreen extends ConsumerStatefulWidget {
-  const ScheduleScreen({super.key});
+class CalendarScreen extends ConsumerStatefulWidget {
+  const CalendarScreen({super.key});
 
   @override
-  ConsumerState<ScheduleScreen> createState() => _ScheduleScreenState();
+  ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
+class _CalendarScreenState extends ConsumerState<CalendarScreen>
     with WidgetsBindingObserver {
   @override
   void initState() {
@@ -55,8 +55,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
           bottom: 70,
         ),
         child: SfCalendar(
-          view: CalendarView.week,
-          firstDayOfWeek: 1,
+          view: CalendarView.month,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
           backgroundColor: tSwitchProvider
@@ -80,13 +79,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
             ),
           ),
           cellBorderColor: tSwitchProvider ? Colors.white : Colors.black,
-          timeSlotViewSettings: TimeSlotViewSettings(
-            timeTextStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
-            ),
-            startHour: 0,
-            endHour: 24,
-          ),
           todayHighlightColor: tSwitchProvider
               ? const Color(0xFF63CF93)
               : const Color(0xFF9c306c),
