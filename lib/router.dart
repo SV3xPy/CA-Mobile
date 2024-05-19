@@ -6,6 +6,7 @@ import 'package:ca_mobile/features/auth/screens/ressetpassword_screen.dart';
 import 'package:ca_mobile/features/auth/screens/signup_screen.dart';
 import 'package:ca_mobile/features/auth/screens/user_information_screen.dart';
 import 'package:ca_mobile/features/auth/screens/verifying_screen.dart';
+import 'package:ca_mobile/features/events/screen/add_event_screen.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:ca_mobile/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case SettingsScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SettingsScreen(),
+      );
+    case AddEventScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const AddEventScreen(),
       );
     default:
       return MaterialPageRoute(

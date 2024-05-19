@@ -101,8 +101,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   padding: const EdgeInsets.only(
                     left: 30.0,
                   ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).hintColor,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF63CF93),
                   ),
                   child: const Row(
                     children: <Widget>[

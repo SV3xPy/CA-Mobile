@@ -1,11 +1,30 @@
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Header extends StatelessWidget {
+class Header extends ConsumerStatefulWidget {
   const Header({super.key});
 
   @override
+  ConsumerState<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends ConsumerState<Header> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final tSwitchProvider = ref.watch(themeSwitchProvider);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         10.0,
@@ -16,22 +35,18 @@ class Header extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          SvgPicture.asset(
-            "assets/grad_cap.png",
-            height: 78.8,
+          const CircleAvatar(
+            radius: 30.0,
+            backgroundImage: AssetImage(""),
           ),
-          const Text(
-            "EduAgenda",
+          Text(
+            "Nombre usuario",
             style: TextStyle(
-              color: Colors.white,
+              color: tSwitchProvider ? Colors.white : Colors.black,
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const CircleAvatar(
-            radius: 25.0,
-            backgroundImage: AssetImage(""),
-          )
         ],
       ),
     );

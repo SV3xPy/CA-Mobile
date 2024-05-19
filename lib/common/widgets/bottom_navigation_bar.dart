@@ -1,18 +1,15 @@
-import 'package:ca_mobile/colors.dart';
-import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:ca_mobile/features/auth/screens/login_screen.dart';
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
+import 'package:ca_mobile/screens/calendar_screen.dart';
 import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:ca_mobile/screens/schedule_screen.dart';
 import 'package:ca_mobile/screens/settings_screen.dart';
 import 'package:ca_mobile/screens/subjects_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
 enum Options {
   ajustes,
-  logout,
 }
 
 class BottomNavigation extends ConsumerStatefulWidget {
@@ -24,13 +21,14 @@ class BottomNavigation extends ConsumerStatefulWidget {
 }
 
 class _BottomNavigationState extends ConsumerState<BottomNavigation>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   int _selectedTab = 0;
   late Widget _currentPage;
   late HomeScreen _homeScreen;
   late SubjectsScreen _subjectsScreen;
   late ScheduleScreen _scheduleScreen;
   late List<Widget> _pages;
+  late TabController tabBarController;
 
   @override
   void initState() {
@@ -44,6 +42,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
       _subjectsScreen,
     ];
     _currentPage = _homeScreen;
+    tabBarController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -75,71 +74,79 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
         context,
         SettingsScreen.routeName,
       );
-    } else if (popupMenuItemIndex == Options.logout.index) {
-      ref.read(authControllerProvider).signOut();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
-        (route) => false,
-      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        centerTitle: false,
-        title: Row(
-          children: [
-            SvgPicture.asset(
-              "assets/grad_cap.png",
-              height: 28.8,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            const Text(
-              "EduAgenda",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+    final tSwitchProvider = ref.watch(themeSwitchProvider);
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: false,
+          title: Row(
+            children: [
+              SvgPicture.asset(
+                "assets/grad_cap.png",
+                height: 28.8,
               ),
-            ),
-          ],
-        ),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              _onMenuItemSelected(value);
-            },
-            itemBuilder: (context) => [
-              _buildPopupMenuItem(
-                "Ajustes",
-                Icons.settings,
-                Options.ajustes.index,
+              const SizedBox(
+                width: 5,
               ),
-              _buildPopupMenuItem(
-                "Salir",
-                Icons.logout,
-                Options.logout.index,
+              Text(
+                "EduAgenda",
+                style: TextStyle(
+                  color: tSwitchProvider ? Colors.white : Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
-        ],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Stack(
-        children: <Widget>[
-          _currentPage,
-          _bottomNavigator(),
-        ],
+          actions: [
+            PopupMenuButton(
+              onSelected: (value) {
+                _onMenuItemSelected(value);
+              },
+              itemBuilder: (context) => [
+                _buildPopupMenuItem(
+                  "Ajustes",
+                  Icons.settings,
+                  Options.ajustes.index,
+                ),
+              ],
+            ),
+          ],
+          bottom: _currentPage == _scheduleScreen
+              ? TabBar(
+                  controller: tabBarController,
+                  tabs: const [
+                    Tab(
+                      text: "Horario",
+                    ),
+                    Tab(
+                      text: "Calendario",
+                    ),
+                  ],
+                )
+              : null,
+        ),
+        body: Stack(
+          children: <Widget>[
+            _currentPage == _scheduleScreen
+                ? TabBarView(
+                    controller: tabBarController,
+                    children: const [
+                      ScheduleScreen(),
+                      CalendarScreen(),
+                    ],
+                  )
+                : _currentPage,
+            _bottomNavigator(),
+          ],
+        ),
       ),
     );
   }
@@ -162,7 +169,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          backgroundColor: Theme.of(context).colorScheme.background,
+          //backgroundColor: Theme.of(context).colorScheme.background,
           currentIndex: _selectedTab,
           onTap: (int tab) {
             setState(() {
@@ -172,13 +179,11 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               }
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
                 size: 35.0,
-                color:
-                    _selectedTab == 0 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),
@@ -186,8 +191,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               icon: Icon(
                 Icons.book,
                 size: 35.0,
-                color:
-                    _selectedTab == 1 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),
@@ -195,8 +198,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               icon: Icon(
                 Icons.home_work,
                 size: 35.0,
-                color:
-                    _selectedTab == 2 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),
@@ -204,8 +205,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               icon: Icon(
                 Icons.comment,
                 size: 35.0,
-                color:
-                    _selectedTab == 3 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),

@@ -2,6 +2,8 @@ import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/error.dart';
 import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
+import 'package:ca_mobile/features/theme/theme.dart';
 import 'package:ca_mobile/router.dart';
 import 'package:ca_mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,34 +29,13 @@ class MyApp extends ConsumerWidget {
         statusBarColor: Colors.transparent,
       ),
     );
+    final themeMode = ref.watch(themeModeProvider.notifier);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CA_Mobile',
-      theme: ThemeData(
-        primaryColor: const Color(
-          0xFF202328,
-        ),
-        colorScheme: const ColorScheme(
-          brightness: Brightness.light,
-          primary: Color(
-            0xFF202328,
-          ),
-          onPrimary: Colors.black,
-          secondary: Colors.transparent,
-          onSecondary: Colors.black,
-          error: Colors.red,
-          onError: Colors.white,
-          background: Colors.white,
-          // background: Color(
-          //   0xFF12171D,
-          // ),
-          onBackground: Colors.black,
-          surface: Colors.white,
-          onSurface: Colors.black,
-        ),
-        hintColor: const Color(0xFF63CF93),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: AppTheme.lightTheme(),
+      darkTheme: AppTheme.darkTheme(),
+      themeMode: themeMode.state,
       onGenerateRoute: (settings) => generateRoute(settings),
       home: ref.watch(userDataAuthProvider).when(
             data: (user) {

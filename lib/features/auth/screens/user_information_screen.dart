@@ -337,26 +337,26 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                                 errorText: "Por favor, ingresa tu nombre."),
                           ],
                         ),
-                        decoration: InputDecoration(
-                          label: const Text(
+                        decoration: const InputDecoration(
+                          label: Text(
                             "Nombre",
                           ),
                           hintText: "Ingresa tu nombre",
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -372,26 +372,26 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                                 errorText: "Por favor, ingresa tu apellido."),
                           ],
                         ),
-                        decoration: InputDecoration(
-                          label: const Text(
+                        decoration: const InputDecoration(
+                          label: Text(
                             "Apellido",
                           ),
                           hintText: "Ingresa tu apellido",
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(
+                          //     color: Colors.black12, // Default border color
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -408,19 +408,19 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                           ],
                         ),
                         onTap: () => _selectDate(context),
-                        decoration: InputDecoration(
-                          icon: const Icon(Icons.calendar_today),
-                          label: const Text("Fecha de Nacimiento"),
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.calendar_today),
+                          label: Text("Fecha de Nacimiento"),
                           hintText: "Selecciona tu fecha de nacimiento",
-                          hintStyle: const TextStyle(color: Colors.black26),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          hintStyle: TextStyle(color: Colors.black26),
+                          // border: OutlineInputBorder(
+                          //   borderSide: const BorderSide(color: Colors.black12),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          // enabledBorder: OutlineInputBorder(
+                          //   borderSide: const BorderSide(color: Colors.black12),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(
