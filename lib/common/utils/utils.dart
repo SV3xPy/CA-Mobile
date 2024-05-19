@@ -6,6 +6,7 @@ import 'dart:io';
 //enabled: data?.enabled ?? enabled ?? false
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 void showSnackBar({BuildContext? context, required String content}) {
   ScaffoldMessenger.of(context!).showSnackBar(
@@ -47,3 +48,23 @@ Future<File?> pickVideoGallery(BuildContext context) async {
   return video;
 }
 
+class Utils {
+  static String toDateTime(DateTime dateTime) {
+    final date = DateFormat.yMEd().format(dateTime);
+    final time = DateFormat.Hm().format(dateTime);
+
+    return '$date $time';
+  }
+
+  static String toDate(DateTime dateTime) {
+    final date = DateFormat('y/M/d').format(dateTime);
+
+    return date;
+  }
+
+  static String toTime(DateTime dateTime) {
+    final time = DateFormat.Hm().format(dateTime);
+
+    return time;
+  }
+}
