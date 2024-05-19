@@ -4,7 +4,9 @@ import 'package:ca_mobile/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ca_mobile/common/utils/utils.dart';
@@ -69,7 +71,36 @@ class AuthRepository {
   Future<bool> signUpGoogle(BuildContext context) async {
     try {
       GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+
       final userCredential = await auth.signInWithProvider(_googleAuthProvider);
+      if (userCredential.user != null) {
+        print("ALGGG");
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          userCredential.user!.sendEmailVerification();
+          }
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, content: e.message!);
+      }
+      return false;
+    }
+  }
+
+  Future<UserCredential> signUpFacebook(BuildContext context) async {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    final userCredential = await auth.signInWithCredential(facebookAuthCredential);
+    return auth.signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<bool> signUpGithub(BuildContext context) async {
+    try {
+      GithubAuthProvider _githubAuthProvider = GithubAuthProvider();
+      final userCredential = await auth.signInWithProvider(_githubAuthProvider);
       if (userCredential.user != null) {
         if (userCredential.additionalUserInfo!.isNewUser) {
           userCredential.user!.sendEmailVerification();
@@ -215,6 +246,19 @@ class AuthRepository {
     if (cacheDir.existsSync()) {
       cacheDir.deleteSync(recursive: true);
     }
+     // Cerrar sesión de Google
+  try {
+    await GoogleSignIn().signOut();
+  } catch (e) {
+    print("Error al cerrar sesión de Google: $e");
+  }
+
+  // Cerrar sesión de Facebook
+  try {
+    await FacebookAuth.instance.logOut();
+  } catch (e) {
+    print("Error al cerrar sesión de Facebook: $e");
+  }
     await auth.signOut();
   }
 

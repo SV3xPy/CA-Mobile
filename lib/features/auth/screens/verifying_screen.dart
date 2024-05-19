@@ -46,7 +46,7 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => const UserInfoScreen(),
+              builder: (context) => const UserInfoScreen(notEmailLogin: false,),
             ),
             (route) => false,
           );
