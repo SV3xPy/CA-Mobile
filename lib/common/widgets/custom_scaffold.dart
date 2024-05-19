@@ -12,8 +12,8 @@ class CustomScaffold extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        // backgroundColor: Colors.transparent,
+        // elevation: 0,
       ),
       extendBodyBehindAppBar: true,
       body: Stack(

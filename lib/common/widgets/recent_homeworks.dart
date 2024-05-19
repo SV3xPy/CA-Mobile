@@ -1,20 +1,37 @@
 import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class RecentHomeworks extends StatefulWidget {
+class RecentHomeworks extends ConsumerStatefulWidget {
   const RecentHomeworks({super.key});
 
   @override
-  State<RecentHomeworks> createState() => _RecentHomeworksState();
+  ConsumerState<RecentHomeworks> createState() => _RecentHomeworksState();
 }
 
-class _RecentHomeworksState extends State<RecentHomeworks> {
+class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
+    with WidgetsBindingObserver {
   DateFormat dateFormat = DateFormat("hh:mm a");
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final tSwitchProvider = ref.watch(themeSwitchProvider);
     return ListView.builder(
       shrinkWrap: true,
       itemCount: recentEvents.length,
@@ -39,7 +56,9 @@ class _RecentHomeworksState extends State<RecentHomeworks> {
                 height: 100.0,
                 width: 341.0,
                 decoration: BoxDecoration(
-                  color: cardColor,
+                  color: tSwitchProvider
+                      ? const Color(0xFF282B30)
+                      : const Color(0xffd7d4cf),
                   borderRadius: BorderRadius.circular(
                     12.0,
                   ),
@@ -53,8 +72,9 @@ class _RecentHomeworksState extends State<RecentHomeworks> {
                       children: <Widget>[
                         Text(
                           event.title,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color:
+                                tSwitchProvider ? Colors.white : Colors.black,
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
                           ),
@@ -66,7 +86,9 @@ class _RecentHomeworksState extends State<RecentHomeworks> {
                           children: <Widget>[
                             Icon(
                               Icons.access_time,
-                              color: Theme.of(context).hintColor,
+                              color: tSwitchProvider
+                                  ? const Color(0xFF63CF93)
+                                  : const Color(0xFF9c306c),
                               size: 17.0,
                             ),
                             const SizedBox(
@@ -84,7 +106,7 @@ class _RecentHomeworksState extends State<RecentHomeworks> {
                         ),
                       ],
                     ),
-                    _todoButton(event)
+                    _todoButton(event, tSwitchProvider)
                   ],
                 ),
               ),
@@ -95,7 +117,7 @@ class _RecentHomeworksState extends State<RecentHomeworks> {
     );
   }
 
-  _todoButton(Event event) {
+  _todoButton(Event event, bool tSwitch) {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -106,12 +128,17 @@ class _RecentHomeworksState extends State<RecentHomeworks> {
         shape: MaterialStateProperty.all(
           CircleBorder(
             side: BorderSide(
-              color: Theme.of(context).hintColor,
+              color:
+                  tSwitch ? const Color(0xFF63CF93) : const Color(0xFF9c306c),
             ),
           ),
         ),
         backgroundColor: MaterialStateProperty.all(
-          event.isDone ? Theme.of(context).hintColor : Colors.transparent,
+          event.isDone
+              ? tSwitch
+                  ? const Color(0xFF63CF93)
+                  : const Color(0xFF9c306c)
+              : Colors.transparent,
         ),
       ),
       child: event.isDone

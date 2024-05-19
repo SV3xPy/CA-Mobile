@@ -1,18 +1,14 @@
-import 'package:ca_mobile/colors.dart';
-import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
-import 'package:ca_mobile/features/auth/screens/login_screen.dart';
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/screens/home_screen.dart';
 import 'package:ca_mobile/screens/schedule_screen.dart';
 import 'package:ca_mobile/screens/settings_screen.dart';
 import 'package:ca_mobile/screens/subjects_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
 enum Options {
   ajustes,
-  logout,
 }
 
 class BottomNavigation extends ConsumerStatefulWidget {
@@ -75,25 +71,15 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
         context,
         SettingsScreen.routeName,
       );
-    } else if (popupMenuItemIndex == Options.logout.index) {
-      ref.read(authControllerProvider).signOut();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
-        (route) => false,
-      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final tSwitchProvider = ref.watch(themeSwitchProvider);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: false,
         title: Row(
           children: [
@@ -104,10 +90,10 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
             const SizedBox(
               width: 5,
             ),
-            const Text(
+            Text(
               "EduAgenda",
               style: TextStyle(
-                color: Colors.white,
+                color: tSwitchProvider ? Colors.white : Colors.black,
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -125,16 +111,10 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
                 Icons.settings,
                 Options.ajustes.index,
               ),
-              _buildPopupMenuItem(
-                "Salir",
-                Icons.logout,
-                Options.logout.index,
-              ),
             ],
           ),
         ],
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: Stack(
         children: <Widget>[
           _currentPage,
@@ -162,7 +142,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          backgroundColor: Theme.of(context).colorScheme.background,
+          //backgroundColor: Theme.of(context).colorScheme.background,
           currentIndex: _selectedTab,
           onTap: (int tab) {
             setState(() {
@@ -172,13 +152,11 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               }
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
                 size: 35.0,
-                color:
-                    _selectedTab == 0 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),
@@ -186,8 +164,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               icon: Icon(
                 Icons.book,
                 size: 35.0,
-                color:
-                    _selectedTab == 1 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),
@@ -195,8 +171,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               icon: Icon(
                 Icons.home_work,
                 size: 35.0,
-                color:
-                    _selectedTab == 2 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),
@@ -204,8 +178,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               icon: Icon(
                 Icons.comment,
                 size: 35.0,
-                color:
-                    _selectedTab == 3 ? Theme.of(context).hintColor : txtColor,
               ),
               label: '',
             ),

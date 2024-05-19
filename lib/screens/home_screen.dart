@@ -1,6 +1,7 @@
 import 'package:ca_mobile/common/widgets/header.dart';
 import 'package:ca_mobile/common/widgets/recent_alerts.dart';
 import 'package:ca_mobile/common/widgets/recent_homeworks.dart';
+import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ca_mobile/colors.dart';
@@ -37,6 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     //final usersAsyncValue = ref.watch(getUsersProvider);
+    final tSwitchProvider = ref.watch(themeSwitchProvider);
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -52,7 +54,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               cursorColor: txtColor,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                fillColor: Theme.of(context).primaryColor,
+                fillColor: tSwitchProvider
+                    ? const Color(0xFF202328)
+                    : const Color(0xffdfdcd7),
                 filled: true,
                 hintText: "Buscar",
                 hintStyle: const TextStyle(
@@ -80,7 +84,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             // ),
             padding: const EdgeInsets.fromLTRB(15, 35, 15, 35),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: tSwitchProvider
+                  ? const Color(0xFF202328)
+                  : const Color(0xffdfdcd7),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(
                   50.0,
@@ -93,10 +99,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
+                Text(
                   "Alertas recientes",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: tSwitchProvider ? Colors.white : Colors.black,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -109,7 +115,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   child: Text(
                     "Ver todos",
                     style: TextStyle(
-                      color: Theme.of(context).hintColor,
+                      color: tSwitchProvider
+                          ? const Color(0xFF63CF93)
+                          : const Color(0xFF9c306c),
                       fontSize: 15.0,
                     ),
                   ),
@@ -117,10 +125,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 const SizedBox(
                   height: 20.0,
                 ),
-                const Text(
+                Text(
                   "Tareas recientes",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: tSwitchProvider ? Colors.white : Colors.black,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -128,12 +136,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 const SizedBox(
                   height: 30,
                 ),
-                RecentHomeworks(),
+                const RecentHomeworks(),
                 Center(
                   child: Text(
                     "Ver todos",
                     style: TextStyle(
-                      color: Theme.of(context).hintColor,
+                      color: tSwitchProvider
+                          ? const Color(0xFF63CF93)
+                          : const Color(0xFF9c306c),
                       fontSize: 15.0,
                     ),
                   ),
