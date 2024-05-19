@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/features/auth/screens/select_photo_options_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -10,27 +12,127 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:intl/intl.dart';
 
 class UserInfoScreen extends ConsumerStatefulWidget {
+  final bool notEmailLogin;
   static const String routeName = '/user-information';
-  const UserInfoScreen({super.key});
+  const UserInfoScreen({super.key, required this.notEmailLogin});
 
   @override
   ConsumerState<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
-  final nameController = TextEditingController();
+  //final nameController = TextEditingController();
+  late TextEditingController nameController;
   final lastNameController = TextEditingController();
   final birthDayController = TextEditingController();
   final _formUserInfoKey = GlobalKey<FormState>();
   DateTime? selectedDate;
   File? _image;
 
+  String? birthday;
+  String? pictureUrl;
+
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
+  }
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.userChanges();
+    nameController = TextEditingController();
+    if (widget.notEmailLogin) {
+      _loadProviderUserData();
+    } else if (FirebaseAuth.instance.currentUser != null) {
+      nameController.text =
+          FirebaseAuth.instance.currentUser!.displayName ?? '';
+      _loadUserImage();
+    }
+    super.initState();
+  }
+
+  Future<void> _loadProviderUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      for (var info in user.providerData) {
+        if (info.providerId == 'facebook.com') {
+          print('FEISSSSSSSSSSSSSSSSSSSS');
+          await _loadFacebookUserData();
+        } else if (info.providerId == 'google.com') {
+          print('GOOOOOOGGGGLLEEEEE');
+          await _loadGoogleUserData();
+        } else if (info.providerId == 'github.com') {
+          print('GIIIIIIHUUUUU');
+          await _loadGithubUserData();
+        }
+      }
+    }
+  }
+
+  Future<void> _loadFacebookUserData() async {
+    final userData = await FacebookAuth.instance
+        .getUserData(fields: "name,birthday,last_name,picture");
+    setState(() {
+      nameController.text = userData['name'] ?? '';
+      lastNameController.text = userData['last_name'] ?? '';
+      // Parsear la fecha de cumpleaños a un objeto DateTime
+      if (userData['birthday'] != null) {
+        final birthdayDate =
+            DateFormat('MM/dd/yyyy').parse(userData['birthday']);
+        selectedDate = birthdayDate;
+        birthDayController.text = DateFormat('dd/MM/yyyy').format(birthdayDate);
+      }
+      pictureUrl = userData['picture']['data']['url'];
+      //FirebaseAuth.instance.currentUser!.updatePhotoURL(pictureUrl);
+      _loadUserImage();
+    });
+  }
+
+  Future<void> _loadGithubUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      nameController.text = user?.displayName ?? '';
+      //pictureUrl = user?.photoURL;
+      print(pictureUrl);
+      _loadUserImage();
+    });
+  }
+
+  Future<void> _loadGoogleUserData() async {
+    // Cargar los datos de Google si es necesario
+    final user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      nameController.text = user?.displayName ?? '';
+      //pictureUrl = user?.photoURL;
+      print(pictureUrl);
+      _loadUserImage();
+    });
+  }
+
+  Future<File> _downloadFile(String url) async {
+    final response = await http.get(Uri.parse(url));
+    final documentDirectory = await getApplicationDocumentsDirectory();
+    final filePath = path.join(documentDirectory.path, 'user_image.jpg');
+    final file = File(filePath);
+    file.writeAsBytesSync(response.bodyBytes);
+    return file;
+  }
+
+  Future<void> _loadUserImage() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user?.photoURL != null) {
+      final File file = await _downloadFile(user!.photoURL!);
+      setState(() {
+        _image = file;
+      });
+    }
   }
 
   Future selectImage(ImageSource source) async {
@@ -144,6 +246,8 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final String? photoUrl = user?.photoURL;
     return CustomScaffold(
       child: Column(
         children: [
@@ -154,10 +258,13 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                   _showSelectPhotoOptions(context);
                 },
                 child: _image == null
-                    ? const CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
-                        ),
+                    ? CircleAvatar(
+                        backgroundImage:
+                            widget.notEmailLogin && photoUrl != null
+                                ? NetworkImage(photoUrl)
+                                : const NetworkImage(
+                                    'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
+                                  ),
                         radius: 64,
                       )
                     : CircleAvatar(

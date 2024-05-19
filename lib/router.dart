@@ -41,8 +41,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const VerifyingScreen(),
       );
     case UserInfoScreen.routeName:
+      final notEmailLogin = settings.arguments as bool?;
       return MaterialPageRoute(
-        builder: (context) => const UserInfoScreen(),
+        builder: (context) =>  UserInfoScreen(notEmailLogin: notEmailLogin?? false),
       );
     case SettingsScreen.routeName:
       return MaterialPageRoute(

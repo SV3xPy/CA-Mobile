@@ -2,6 +2,7 @@ import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/custom_scaffold.dart';
 import 'package:ca_mobile/features/auth/screens/ressetpassword_screen.dart';
 import 'package:ca_mobile/features/auth/screens/signup_screen.dart';
+import 'package:ca_mobile/features/auth/screens/user_information_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -261,8 +262,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   .signUpWithGoogle(context)
                                   .then((value) {
                                 if (value) {
-                                  Navigator.pushNamed(
-                                      context, BottomNavigation.routeName);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserInfoScreen(
+                                        notEmailLogin: true,
+                                      ),
+                                    ),
+                                  );
                                 } else {
                                   print("Error al iniciar sesion.");
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -282,22 +290,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           GestureDetector(
                             onTap: () {
                               ref
-                                .read(authControllerProvider)
-                                .singUpWithFacebook(context)
-                                .then((value) {
-                                  if(value){
-                                    Navigator.pushNamed(context, BottomNavigation.routeName);
-                                  }else{
-                                    print('error al iniciar sesion');
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  .read(authControllerProvider)
+                                  .singUpWithFacebook(context)
+                                  .then((value) {
+                                if (value.toString().isNotEmpty) {                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserInfoScreen(
+                                        notEmailLogin: true,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  print('error al iniciar sesion');
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
                                         'No se encontró el usuario. Cree una cuenta nueva.',
                                       ),
                                     ),
                                   );
-                                  }
-                                });
+                                }
+                              });
                             },
                             child: Brand(
                               Brands.facebook,
@@ -306,23 +321,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                                ref
-                                .read(authControllerProvider)
-                                .singUpWithGithub(context)
-                                .then((value) {
-                                  if(value){
-                                    Navigator.pushNamed(context, BottomNavigation.routeName);
-                                  }else{
-                                    print('error al iniciar sesion');
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                              ref
+                                  .read(authControllerProvider)
+                                  .singUpWithGithub(context)
+                                  .then((value) {
+                                if (value) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserInfoScreen(
+                                        notEmailLogin: true,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  print('error al iniciar sesion');
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
                                         'No se encontró el usuario. Cree una cuenta nueva.',
                                       ),
                                     ),
                                   );
-                                  }
-                                });
+                                }
+                              });
                             },
                             child: Brand(
                               Brands.github,
