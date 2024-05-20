@@ -15,7 +15,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:intl/intl.dart';
 
 class UserInfoScreen extends ConsumerStatefulWidget {
   final bool notEmailLogin;

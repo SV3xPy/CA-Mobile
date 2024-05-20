@@ -4,19 +4,17 @@ class Event {
   final DateTime to;
   final String subject;
   final String description;
-  final String tipo;
+  final String type;
   final bool isDone;
-  final bool isAllDay;
 
   Event({
     required this.title,
     required this.description,
     required this.from,
     required this.to,
-    required this.tipo,
+    required this.type,
     required this.subject,
     required this.isDone,
-    required this.isAllDay,
   });
 }
 
