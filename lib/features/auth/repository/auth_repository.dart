@@ -206,7 +206,7 @@ class AuthRepository {
               profilePic,
             );
       }
-
+      FirebaseAuth.instance.currentUser!.updatePhotoURL(photoURL);
       var user = UserModel(
         name: name,
         lastName: lastName,

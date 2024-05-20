@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/common/widgets/image_selector.dart';
 import 'package:ca_mobile/features/auth/screens/select_photo_options_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -31,9 +32,9 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   final lastNameController = TextEditingController();
   final birthDayController = TextEditingController();
   final _formUserInfoKey = GlobalKey<FormState>();
+  final ImageService _imageService = ImageService();
   DateTime? selectedDate;
   File? _image;
-
   String? birthday;
   String? pictureUrl;
 
@@ -227,6 +228,7 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
 
   void storeUserData() async {
     String name = nameController.text.trim();
+    FirebaseAuth.instance.currentUser!.updateDisplayName(name);
     String lastName = lastNameController.text.trim();
     String? birthDate = selectedDate != null
         ? DateFormat('yyyy-MM-dd').format(selectedDate!)
@@ -254,7 +256,20 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  _showSelectPhotoOptions(context);
+                  _image == null ? print("Imagen null") : print('Algo aqui');
+
+                  _imageService.showSelectPhotoOptions(context, (source) async {
+                    File? selectedImage =
+                        await _imageService.selectImage(context, source, (img) {
+                      setState(() {
+                        _image = img;
+                        Navigator.of(context).pop();
+                      });
+                      _image == null
+                          ? print("Imagen null")
+                          : print('Algo aqui');
+                    });
+                  });
                 },
                 child: _image == null
                     ? CircleAvatar(
@@ -276,7 +291,16 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                 left: 80,
                 child: IconButton(
                   onPressed: () {
-                    _showSelectPhotoOptions(context);
+                    _imageService.showSelectPhotoOptions(context,
+                        (source) async {
+                      File? selectedImage = await _imageService
+                          .selectImage(context, source, (img) {
+                        setState(() {
+                          _image = img;
+                          Navigator.of(context).pop();
+                        });
+                      });
+                    });
                   },
                   icon: const Icon(Icons.add_a_photo),
                 ),
@@ -431,7 +455,13 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                             storeUserData();
                           }
                         },
-                        icon: const Icon(Icons.done),
+                        icon: Icon(
+                          Icons.done,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black // Color para el modo claro
+                                  : Colors.white, // Color para el modo oscuro
+                        ),
                       ),
                     ],
                   ),
