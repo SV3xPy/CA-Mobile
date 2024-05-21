@@ -1,5 +1,6 @@
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -17,6 +18,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
   final profNameController = TextEditingController();
   final colorController = TextEditingController();
   final _formSubjectKey = GlobalKey<FormState>();
+  Color color = Colors.red;
   @override
   void initState() {
     super.initState();
@@ -27,6 +29,44 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+  }
+
+  Widget buildColorPicker() {
+    return ColorPicker(
+      pickerColor: color,
+      onColorChanged: (color) {
+        setState(() {
+          this.color = color;
+        });
+      },
+    );
+  }
+
+  void pickColors(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Selecciona un color",
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildColorPicker(),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Seleccionar",
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -114,6 +154,58 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                     ),
                     const SizedBox(
                       height: 25.0,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Color",
+                          style: TextStyle(
+                            color:
+                                tSwitchProvider ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: color,
+                              ),
+                              width: 60,
+                              height: 60,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                pickColors(context);
+                              },
+                              child: const Text(
+                                "Selecciona un color",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25.0,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                          "Guardar",
+                        ),
+                      ),
                     ),
                   ],
                 ),
