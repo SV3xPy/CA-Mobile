@@ -174,7 +174,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
           onTap: (int tab) {
             setState(() {
               _selectedTab = tab;
-              if (tab == 0 || tab == 1) {
+              if (tab == 0 || tab == 1 || tab == 2) {
                 _currentPage = _pages[tab];
               }
             });

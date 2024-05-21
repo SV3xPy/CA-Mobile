@@ -4,6 +4,7 @@ import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:ca_mobile/models/subject_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -48,12 +49,17 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
         ),
       );
     }
+    WidgetsBinding.instance.addObserver(this);
   }
 
-  Future pickFromDateTime({required bool pickDate}) async {
+  Future pickFromDateTime({
+    required bool pickDate,
+    required bool theme,
+  }) async {
     final date = await pickDateTime(
       fromDate,
       pickDate: pickDate,
+      theme: theme,
     );
 
     if (date == null) return;
@@ -73,12 +79,11 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     });
   }
 
-  Future pickToDateTime({required bool pickDate}) async {
-    final date = await pickDateTime(
-      toDate,
-      pickDate: pickDate,
-      firstDate: pickDate ? fromDate : null,
-    );
+  Future pickToDateTime({required bool pickDate, required bool theme}) async {
+    final date = await pickDateTime(toDate,
+        pickDate: pickDate,
+        firstDate: pickDate ? fromDate : null,
+        theme: theme);
 
     if (date == null) return;
 
@@ -91,6 +96,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     DateTime initialDate, {
     required bool pickDate,
     DateTime? firstDate,
+    required bool theme,
   }) async {
     if (pickDate) {
       final date = await showDatePicker(
@@ -98,6 +104,22 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
         initialDate: initialDate,
         firstDate: firstDate ?? DateTime(1900),
         lastDate: DateTime(2101),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: theme
+                  ? const ColorScheme.dark(
+                      primary: Color(0xFF63CF93),
+                      onSurface: Colors.white,
+                    )
+                  : const ColorScheme.light(
+                      primary: Color(0xFF9c306c),
+                      onSurface: Colors.black,
+                    ),
+            ),
+            child: child!,
+          );
+        },
       );
 
       if (date == null) return null;
@@ -134,6 +156,12 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
   }
 
   Future dummy() async {}
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
   // Future<void> _selectDate(BuildContext context) async {
   //   final DateTime? picked = await showDatePicker(
@@ -255,8 +283,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   ),
                                   onTap: () {
                                     pickFromDateTime(
-                                      pickDate: true,
-                                    );
+                                        pickDate: true, theme: tSwitchProvider);
                                   },
                                 ),
                               ),
@@ -295,6 +322,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   onTap: () {
                                     pickFromDateTime(
                                       pickDate: false,
+                                      theme: tSwitchProvider,
                                     );
                                   },
                                 ),
@@ -357,6 +385,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   onTap: () {
                                     pickToDateTime(
                                       pickDate: true,
+                                      theme: tSwitchProvider,
                                     );
                                   },
                                 ),
@@ -395,8 +424,8 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   ),
                                   onTap: () {
                                     pickToDateTime(
-                                      pickDate: false,
-                                    );
+                                        pickDate: false,
+                                        theme: tSwitchProvider);
                                   },
                                 ),
                               ),

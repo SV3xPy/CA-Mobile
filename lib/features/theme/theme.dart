@@ -94,80 +94,201 @@ class AppTheme {
             color: Colors.black26,
           ),
         ),
+        dividerTheme: const DividerThemeData(
+          color: Colors.black,
+        ),
+        datePickerTheme: const DatePickerThemeData(
+          surfaceTintColor: Color(
+            0xFFede8e2,
+          ),
+          shadowColor: Colors.black,
+          cancelButtonStyle: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(
+              Colors.black,
+            ),
+          ),
+          confirmButtonStyle: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(
+              Colors.black,
+            ),
+          ),
+          dayForegroundColor: MaterialStatePropertyAll(
+            Colors.black,
+          ),
+          todayForegroundColor: MaterialStatePropertyAll(
+            Colors.black,
+          ),
+          weekdayStyle: TextStyle(
+            color: Colors.black,
+          ),
+          dividerColor: Colors.black,
+          headerBackgroundColor: Color(
+            0xFF9c306c,
+          ),
+          headerForegroundColor: Colors.black,
+          yearForegroundColor: MaterialStatePropertyAll(
+            Colors.black,
+          ),
+        ),
+        timePickerTheme: const TimePickerThemeData(
+          helpTextStyle: TextStyle(
+            color: Colors.black,
+          ),
+          backgroundColor: Color(
+            0xFFede8e2,
+          ),
+          cancelButtonStyle: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(
+              Colors.black,
+            ),
+          ),
+          confirmButtonStyle: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(
+              Colors.black,
+            ),
+          ),
+          dialBackgroundColor: Colors.white,
+          dialHandColor: Color(
+            0xFF9c306c,
+          ),
+          //dialTextColor: Colors.black,
+          hourMinuteColor: Colors.white,
+          entryModeIconColor: Colors.black,
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity);
   }
 
   static ThemeData darkTheme() {
     return ThemeData(
-        //colorScheme: darkColorScheme,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              const Color(0xFFBE9020), // Slightly darker shade for the button
+      //colorScheme: darkColorScheme,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+            const Color(0xFFBE9020), // Slightly darker shade for the button
+          ),
+          foregroundColor:
+              MaterialStateProperty.all<Color>(Colors.white), // text color
+          elevation: MaterialStateProperty.all<double>(5.0), // shadow
+          padding: MaterialStateProperty.all<EdgeInsets>(
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16), // Adjust as needed
             ),
-            foregroundColor:
-                MaterialStateProperty.all<Color>(Colors.white), // text color
-            elevation: MaterialStateProperty.all<double>(5.0), // shadow
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16), // Adjust as needed
-              ),
-            ),
           ),
         ),
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          actionsIconTheme: IconThemeData(color: Colors.white),
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
+      ),
+      appBarTheme: const AppBarTheme(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        actionsIconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFF12171D),
+        selectedIconTheme: IconThemeData(
+          color: Color(0xFF63CF93),
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: Color(0xFF6C7174),
+        ),
+      ),
+      scaffoldBackgroundColor: const Color(0xFF12171D),
+
+      iconTheme: const IconThemeData(
+        color: Colors.white,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Color(0xFFBE9020),
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Color(0xFFBE9020),
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Color(0xFFBE9020),
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        hintStyle: const TextStyle(
+          color: Color(0xFFBE9020),
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: Color(0xFFBE9020),
+        ),
+      ),
+      dividerColor: Colors.white,
+      datePickerTheme: const DatePickerThemeData(
+        surfaceTintColor: Color(0xFF12171D),
+        shadowColor: Colors.white,
+        cancelButtonStyle: ButtonStyle(
+          foregroundColor: MaterialStatePropertyAll(
+            Colors.white,
           ),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF12171D),
-          selectedIconTheme: IconThemeData(
-            color: Color(0xFF63CF93),
-          ),
-          unselectedIconTheme: IconThemeData(
-            color: Color(0xFF6C7174),
+        confirmButtonStyle: ButtonStyle(
+          foregroundColor: MaterialStatePropertyAll(
+            Colors.white,
           ),
         ),
-        scaffoldBackgroundColor: const Color(0xFF12171D),
-        iconTheme: const IconThemeData(
+        dayForegroundColor: MaterialStatePropertyAll(
+          Colors.white,
+        ),
+        todayForegroundColor: MaterialStatePropertyAll(
+          Colors.white,
+        ),
+        weekdayStyle: TextStyle(
           color: Colors.white,
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color(0xFFBE9020),
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color(0xFFBE9020),
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color(0xFFBE9020),
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          hintStyle: const TextStyle(
-            color: Color(0xFFBE9020),
-          ),
-          floatingLabelStyle: const TextStyle(
-            color: Color(0xFFBE9020),
+        dividerColor: Colors.white,
+        headerBackgroundColor: Color(
+          0xFF63CF93,
+        ),
+        headerForegroundColor: Colors.white,
+        yearForegroundColor: MaterialStatePropertyAll(
+          Colors.white,
+        ),
+      ),
+      timePickerTheme: const TimePickerThemeData(
+        helpTextStyle: TextStyle(color: Colors.white),
+        backgroundColor: Color(0xFF12171D),
+        cancelButtonStyle: ButtonStyle(
+          foregroundColor: MaterialStatePropertyAll(
+            Colors.white,
           ),
         ),
-        dividerColor: Colors.white,
-        visualDensity: VisualDensity.adaptivePlatformDensity);
+        confirmButtonStyle: ButtonStyle(
+          foregroundColor: MaterialStatePropertyAll(
+            Colors.white,
+          ),
+        ),
+        dialBackgroundColor: Color(
+          0xFF282B30,
+        ),
+        dialHandColor: Color(
+          0xFF63CF93,
+        ),
+        //dialTextColor: Colors.black,
+        hourMinuteColor: Color(
+          0xFF282B30,
+        ),
+        hourMinuteTextColor: Colors.white,
+        dialTextColor: Colors.white,
+        entryModeIconColor: Colors.white,
+      ),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+    );
   }
 }
