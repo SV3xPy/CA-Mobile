@@ -14,19 +14,23 @@ class Subject {
 
 List<Subject> subjects = [
   Subject(
-      subject: "Math",
-      teacherName: "Lauren Romanov",
-      color: const Color(0xFF000000)),
+    subject: "Math",
+    teacherName: "Lauren Romanov",
+    color: const Color(0xFF000000),
+  ),
   Subject(
-      subject: "Math",
-      teacherName: "Lauren Romanov",
-      color: const Color(0xFF000000)),
+    subject: "Math",
+    teacherName: "Lauren Romanov",
+    color: const Color(0xFF000000),
+  ),
   Subject(
-      subject: "Math",
-      teacherName: "Lauren Romanov",
-      color: const Color(0xFF000000)),
+    subject: "Math",
+    teacherName: "Lauren Romanov",
+    color: const Color(0xFF000000),
+  ),
   Subject(
-      subject: "Math",
-      teacherName: "Lauren Romanov",
-      color: const Color(0xFF000000)),
+    subject: "Math",
+    teacherName: "Lauren Romanov",
+    color: const Color(0xFF000000),
+  ),
 ];

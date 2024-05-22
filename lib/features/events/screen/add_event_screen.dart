@@ -577,6 +577,29 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                     const SizedBox(
                       height: 25.0,
                     ),
+                    TextFormField(
+                      controller: descriptionController,
+                      keyboardType: TextInputType.name,
+                      style: TextStyle(
+                        color: tSwitchProvider ? Colors.white : Colors.black,
+                      ),
+                      decoration: InputDecoration(
+                        label: Text(
+                          "Descripción",
+                          style: TextStyle(
+                            color:
+                                tSwitchProvider ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        hintText: "Añade más detalles del evento",
+                        hintStyle: TextStyle(
+                          color: tSwitchProvider ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

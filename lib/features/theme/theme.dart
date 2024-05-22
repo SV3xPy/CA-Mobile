@@ -155,6 +155,14 @@ class AppTheme {
           hourMinuteColor: Colors.white,
           entryModeIconColor: Colors.black,
         ),
+        popupMenuTheme: const PopupMenuThemeData(
+          iconColor: Color(
+            0xFF9c306c,
+          ),
+          color: Color(
+            0xffd7d4cf,
+          ),
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity);
   }
 
@@ -287,6 +295,14 @@ class AppTheme {
         hourMinuteTextColor: Colors.white,
         dialTextColor: Colors.white,
         entryModeIconColor: Colors.white,
+      ),
+      popupMenuTheme: const PopupMenuThemeData(
+        iconColor: Color(
+          0xFF63CF93,
+        ),
+        color: Color(
+          0xFF282B30,
+        ),
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );

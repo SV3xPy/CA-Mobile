@@ -1,3 +1,4 @@
+import 'package:ca_mobile/common/widgets/subjects_list.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen>
           ),
         ),
       ),
+      body: const SubjectsList(),
     );
   }
 }
