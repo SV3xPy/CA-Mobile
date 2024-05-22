@@ -1,42 +1,36 @@
+import 'package:flutter/material.dart';
+
 class Subject {
   final String subject;
-  final String type;
   final String teacherName;
-  final DateTime time;
-  bool isPassed = false;
-  bool isHappening = false;
+  final Color color;
 
   Subject({
+    required this.color,
     required this.subject,
-    required this.type,
     required this.teacherName,
-    required this.time,
   });
 }
 
 List<Subject> subjects = [
   Subject(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
   Subject(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
   Subject(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
   Subject(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
 ];

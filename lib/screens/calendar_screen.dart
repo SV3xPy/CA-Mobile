@@ -29,6 +29,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final bgCalendar =
+        tSwitchProvider ? const Color(0xFF12171D) : const Color(0xffede8e2);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
@@ -41,9 +46,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
               AddEventScreen.routeName,
             );
           },
-          backgroundColor: tSwitchProvider
-              ? const Color(0xFF63CF93)
-              : const Color(0xFF9c306c),
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -58,30 +60,24 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
           view: CalendarView.month,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
-          backgroundColor: tSwitchProvider
-              ? const Color(0xFF12171D)
-              : const Color(0xffede8e2),
+          backgroundColor: bgCalendar,
           headerStyle: CalendarHeaderStyle(
-            backgroundColor: tSwitchProvider
-                ? const Color(0xFF12171D)
-                : const Color(0xffede8e2),
+            backgroundColor: bgCalendar,
             textStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
             textAlign: TextAlign.center,
           ),
           viewHeaderStyle: ViewHeaderStyle(
             dayTextStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
             dateTextStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
           ),
-          cellBorderColor: tSwitchProvider ? Colors.white : Colors.black,
-          todayHighlightColor: tSwitchProvider
-              ? const Color(0xFF63CF93)
-              : const Color(0xFF9c306c),
+          cellBorderColor: txtColor,
+          todayHighlightColor: iconColor,
           showDatePickerButton: true,
           showNavigationArrow: true,
           showTodayButton: true,

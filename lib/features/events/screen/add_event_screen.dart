@@ -1,5 +1,4 @@
 import 'package:ca_mobile/common/utils/utils.dart';
-import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:ca_mobile/models/subject_model.dart';
@@ -49,12 +48,17 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
         ),
       );
     }
+    WidgetsBinding.instance.addObserver(this);
   }
 
-  Future pickFromDateTime({required bool pickDate}) async {
+  Future pickFromDateTime({
+    required bool pickDate,
+    required bool theme,
+  }) async {
     final date = await pickDateTime(
       fromDate,
       pickDate: pickDate,
+      theme: theme,
     );
 
     if (date == null) return;
@@ -74,12 +78,11 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     });
   }
 
-  Future pickToDateTime({required bool pickDate}) async {
-    final date = await pickDateTime(
-      toDate,
-      pickDate: pickDate,
-      firstDate: pickDate ? fromDate : null,
-    );
+  Future pickToDateTime({required bool pickDate, required bool theme}) async {
+    final date = await pickDateTime(toDate,
+        pickDate: pickDate,
+        firstDate: pickDate ? fromDate : null,
+        theme: theme);
 
     if (date == null) return;
 
@@ -92,6 +95,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     DateTime initialDate, {
     required bool pickDate,
     DateTime? firstDate,
+    required bool theme,
   }) async {
     if (pickDate) {
       final date = await showDatePicker(
@@ -99,6 +103,22 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
         initialDate: initialDate,
         firstDate: firstDate ?? DateTime(1900),
         lastDate: DateTime(2101),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: theme
+                  ? const ColorScheme.dark(
+                      primary: Color(0xFF63CF93),
+                      onSurface: Colors.white,
+                    )
+                  : const ColorScheme.light(
+                      primary: Color(0xFF9c306c),
+                      onSurface: Colors.black,
+                    ),
+            ),
+            child: child!,
+          );
+        },
       );
 
       if (date == null) return null;
@@ -150,26 +170,27 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
 
   Future dummy() async {}
 
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     helpText: "Seleccióna la fecha",
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(1900),
-  //     lastDate: DateTime.now(),
-  //   );
-  //   if (picked != null && picked != selectedDate) {
-  //     setState(() {
-  //       selectedDate = picked;
-  //       birthDayController.text =
-  //           "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}";
-  //     });
-  //   }
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    eventTitleController.dispose();
+    descriptionController.dispose();
+    allDatController.dispose();
+    fromController.dispose();
+    toController.dispose();
+    subjectController.dispose();
+    typeController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final datetimeBorder =
+        tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -196,7 +217,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                       keyboardType: TextInputType.name,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       style: TextStyle(
-                        color: tSwitchProvider ? Colors.white : Colors.black,
+                        color: txtColor,
                       ),
                       validator: FormBuilderValidators.compose(
                         [
@@ -209,13 +230,12 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                         label: Text(
                           "Título",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                           ),
                         ),
                         hintText: "Título del evento",
                         hintStyle: TextStyle(
-                          color: tSwitchProvider ? Colors.white : Colors.black,
+                          color: txtColor,
                         ),
                       ),
                     ),
@@ -228,8 +248,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                         Text(
                           "Desde",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
@@ -244,9 +263,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: tSwitchProvider
-                                        ? const Color(0xFFBE9020)
-                                        : Colors.black12,
+                                    color: datetimeBorder,
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(
@@ -257,21 +274,16 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   title: Text(
                                     Utils.toDate(fromDate),
                                     style: TextStyle(
-                                      color: tSwitchProvider
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: txtColor,
                                     ),
                                   ),
                                   leading: Icon(
                                     Icons.calendar_month,
-                                    color: tSwitchProvider
-                                        ? const Color(0xFF63CF93)
-                                        : const Color(0xFF9c306c),
+                                    color: iconColor,
                                   ),
                                   onTap: () {
                                     pickFromDateTime(
-                                      pickDate: true,
-                                    );
+                                        pickDate: true, theme: tSwitchProvider);
                                   },
                                 ),
                               ),
@@ -283,9 +295,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: tSwitchProvider
-                                        ? const Color(0xFFBE9020)
-                                        : Colors.black12,
+                                    color: datetimeBorder,
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(
@@ -296,20 +306,17 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   title: Text(
                                     Utils.toTime(fromDate),
                                     style: TextStyle(
-                                      color: tSwitchProvider
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: txtColor,
                                     ),
                                   ),
                                   leading: Icon(
                                     Icons.timer_outlined,
-                                    color: tSwitchProvider
-                                        ? const Color(0xFF63CF93)
-                                        : const Color(0xFF9c306c),
+                                    color: iconColor,
                                   ),
                                   onTap: () {
                                     pickFromDateTime(
                                       pickDate: false,
+                                      theme: tSwitchProvider,
                                     );
                                   },
                                 ),
@@ -328,8 +335,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                         Text(
                           "Hasta",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
@@ -345,9 +351,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: tSwitchProvider
-                                        ? const Color(0xFFBE9020)
-                                        : Colors.black12,
+                                    color: datetimeBorder,
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(
@@ -358,20 +362,17 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   title: Text(
                                     Utils.toDate(toDate),
                                     style: TextStyle(
-                                      color: tSwitchProvider
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: txtColor,
                                     ),
                                   ),
                                   leading: Icon(
                                     Icons.calendar_month,
-                                    color: tSwitchProvider
-                                        ? const Color(0xFF63CF93)
-                                        : const Color(0xFF9c306c),
+                                    color: iconColor,
                                   ),
                                   onTap: () {
                                     pickToDateTime(
                                       pickDate: true,
+                                      theme: tSwitchProvider,
                                     );
                                   },
                                 ),
@@ -384,9 +385,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: tSwitchProvider
-                                        ? const Color(0xFFBE9020)
-                                        : Colors.black12,
+                                    color: datetimeBorder,
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(
@@ -397,21 +396,17 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   title: Text(
                                     Utils.toTime(toDate),
                                     style: TextStyle(
-                                      color: tSwitchProvider
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: txtColor,
                                     ),
                                   ),
                                   leading: Icon(
                                     Icons.timer_outlined,
-                                    color: tSwitchProvider
-                                        ? const Color(0xFF63CF93)
-                                        : const Color(0xFF9c306c),
+                                    color: iconColor,
                                   ),
                                   onTap: () {
                                     pickToDateTime(
-                                      pickDate: false,
-                                    );
+                                        pickDate: false,
+                                        theme: tSwitchProvider);
                                   },
                                 ),
                               ),
@@ -429,23 +424,18 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                           child: TextFormField(
                             readOnly: true,
                             style: TextStyle(
-                              color:
-                                  tSwitchProvider ? Colors.white : Colors.black,
+                              color: txtColor,
                             ),
                             decoration: InputDecoration(
                               label: Text(
                                 "Materia",
                                 style: TextStyle(
-                                  color: tSwitchProvider
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color: txtColor,
                                 ),
                               ),
                               hintText: _selectedSubject,
                               hintStyle: TextStyle(
-                                color: tSwitchProvider
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: txtColor,
                               ),
                               suffixIcon: FutureBuilder(
                                 future:
@@ -455,9 +445,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                     return DropdownButton<Subject>(
                                       icon: Icon(
                                         Icons.keyboard_arrow_down,
-                                        color: tSwitchProvider
-                                            ? const Color(0xFF63CF93)
-                                            : const Color(0xFF9c306c),
+                                        color: iconColor,
                                       ),
                                       underline: Container(
                                         height: 0,
@@ -484,9 +472,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                   }
                                   return Icon(
                                     Icons.keyboard_arrow_down,
-                                    color: tSwitchProvider
-                                        ? const Color(0xFF63CF93)
-                                        : const Color(0xFF9c306c),
+                                    color: iconColor,
                                   );
                                 },
                               ),
@@ -505,8 +491,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                             controller: typeController,
                             readOnly: true,
                             style: TextStyle(
-                              color:
-                                  tSwitchProvider ? Colors.white : Colors.black,
+                              color: txtColor,
                             ),
                             decoration: InputDecoration(
                               suffixIcon: DropdownButton<String>(
@@ -515,9 +500,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                 ),
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: tSwitchProvider
-                                      ? const Color(0xFF63CF93)
-                                      : const Color(0xFF9c306c),
+                                  color: iconColor,
                                 ),
                                 underline: Container(
                                   height: 0,
@@ -544,16 +527,12 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                               label: Text(
                                 "Tipo",
                                 style: TextStyle(
-                                  color: tSwitchProvider
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color: txtColor,
                                 ),
                               ),
                               hintText: _selectedType,
                               hintStyle: TextStyle(
-                                color: tSwitchProvider
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: txtColor,
                               ),
                             ),
                           ),
@@ -562,6 +541,28 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                     ),
                     const SizedBox(
                       height: 25.0,
+                    ),
+                    TextFormField(
+                      controller: descriptionController,
+                      keyboardType: TextInputType.name,
+                      style: TextStyle(
+                        color: txtColor,
+                      ),
+                      decoration: InputDecoration(
+                        label: Text(
+                          "Descripción",
+                          style: TextStyle(
+                            color: txtColor,
+                          ),
+                        ),
+                        hintText: "Añade más detalles del evento",
+                        hintStyle: TextStyle(
+                          color: txtColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
                     ),
                     SizedBox(
                       width: double.infinity,

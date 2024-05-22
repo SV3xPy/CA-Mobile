@@ -42,6 +42,8 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   void dispose() {
     super.dispose();
     nameController.dispose();
+    lastNameController.dispose();
+    birthDayController.dispose();
   }
 
   @override
@@ -368,18 +370,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                           hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          // border: OutlineInputBorder(
-                          //   borderSide: const BorderSide(
-                          //     color: Colors.black12, // Default border color
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
-                          // enabledBorder: OutlineInputBorder(
-                          //   borderSide: const BorderSide(
-                          //     color: Colors.black12, // Default border color
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -403,18 +393,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                           hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          // border: OutlineInputBorder(
-                          //   borderSide: const BorderSide(
-                          //     color: Colors.black12, // Default border color
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
-                          // enabledBorder: OutlineInputBorder(
-                          //   borderSide: const BorderSide(
-                          //     color: Colors.black12, // Default border color
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
                         ),
                       ),
                       const SizedBox(
@@ -436,14 +414,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                           label: Text("Fecha de Nacimiento"),
                           hintText: "Selecciona tu fecha de nacimiento",
                           hintStyle: TextStyle(color: Colors.black26),
-                          // border: OutlineInputBorder(
-                          //   borderSide: const BorderSide(color: Colors.black12),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
-                          // enabledBorder: OutlineInputBorder(
-                          //   borderSide: const BorderSide(color: Colors.black12),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
                         ),
                       ),
                       const SizedBox(

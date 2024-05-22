@@ -31,6 +31,7 @@ class _HeaderState extends ConsumerState<Header> with WidgetsBindingObserver {
     final String? photoUrl = user?.photoURL;
     final String? userName = user?.displayName;
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         10.0,
@@ -55,7 +56,7 @@ class _HeaderState extends ConsumerState<Header> with WidgetsBindingObserver {
             child: AutoSizeText(
               userName ?? "Nombre usuario",
               style: TextStyle(
-                color: tSwitchProvider ? Colors.white : Colors.black,
+                color: txtColor,
                 fontSize: 35.0,
                 fontWeight: FontWeight.bold,
               ),
