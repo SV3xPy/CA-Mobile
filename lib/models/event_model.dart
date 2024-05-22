@@ -6,6 +6,7 @@ class EventModel {
   final String description;
   final String type;
   final bool isDone;
+  final String color;
 
   EventModel({
     required this.title,
@@ -15,6 +16,7 @@ class EventModel {
     required this.type,
     required this.subject,
     required this.isDone,
+    required this.color,
   });
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +26,8 @@ class EventModel {
       'to': to,
       'type': type,
       'subject': subject,
-      'isDone': isDone
+      'isDone': isDone,
+      'color': color,
     };
   }
 
@@ -36,7 +39,8 @@ class EventModel {
       to: map['to'] ?? '',
       type: map['type'] ?? '',
       subject: map['subject'] ?? '',
-      isDone: map['isDone'] ?? ''
+      isDone: map['isDone'] ?? '',
+      color: map['color']?? '',
     );
   }
 }

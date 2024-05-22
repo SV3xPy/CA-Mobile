@@ -56,11 +56,12 @@ class EventRepository {
           to: to,
           type: type,
           subject: subject,
+          color:color,
           isDone: false);
       await firestore
-          .collection('events')
+          .collection('users')
           .doc(uid)
-          .collection('userEvents')
+          .collection('events')
           .doc(eventId)
           .set(event.toMap())
           .then((value) => Navigator.pushAndRemoveUntil(
