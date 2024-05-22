@@ -5,10 +5,11 @@ import 'package:ca_mobile/models/subject_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:ca_mobile/features/events/controller/event_controller.dart';
 
 class AddEventScreen extends ConsumerStatefulWidget {
   static const routeName = '/add_event';
-  final Event? event;
+  final EventModel? event;
   const AddEventScreen({super.key, this.event});
 
   @override
@@ -150,6 +151,20 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
       );
 
       return date.add(time);
+    }
+  }
+
+  void storeEventData() async {
+    String title = eventTitleController.text.trim();
+    fromDate;
+    toDate;
+    String subject = subjectController.text.trim();
+    String type = typeController.text.trim();
+    String color = 'FFFFFF';
+    String description = 'prueba';
+    if (title.isNotEmpty) {
+      ref.read(eventControllerProvider).saveEventDataToFirebase(
+          context, title, fromDate, toDate, subject, description, type, color);
     }
   }
 
@@ -552,7 +567,9 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          storeEventData();
+                        },
                         child: const Text(
                           "Guardar",
                         ),
