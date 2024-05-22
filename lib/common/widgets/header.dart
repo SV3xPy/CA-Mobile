@@ -25,6 +25,7 @@ class _HeaderState extends ConsumerState<Header> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         10.0,
@@ -42,7 +43,7 @@ class _HeaderState extends ConsumerState<Header> with WidgetsBindingObserver {
           Text(
             "Nombre usuario",
             style: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
             ),

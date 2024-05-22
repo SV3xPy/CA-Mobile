@@ -23,7 +23,6 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _startVerificationTimer();
   }
@@ -46,7 +45,9 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => const UserInfoScreen(notEmailLogin: false,),
+              builder: (context) => const UserInfoScreen(
+                notEmailLogin: false,
+              ),
             ),
             (route) => false,
           );

@@ -31,8 +31,13 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  PopupMenuItem _buildPopupMenuItem(String title, IconData iconData,
-      int position, Color iconColor, Color txtColor) {
+  PopupMenuItem _buildPopupMenuItem(
+    String title,
+    IconData iconData,
+    int position,
+    Color iconColor,
+    Color txtColor,
+  ) {
     return PopupMenuItem(
       value: position,
       child: Row(
@@ -68,7 +73,9 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
     final tSwitchProvider = ref.watch(themeSwitchProvider);
     final iconColor =
         tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
-    final txt_Color = tSwitchProvider ? Colors.white : Colors.black;
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final bgContainer =
+        tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
     return ListView.builder(
       shrinkWrap: true,
       itemCount: subjects.length,
@@ -108,9 +115,7 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                 height: 100.0,
                 width: 326.0,
                 decoration: BoxDecoration(
-                  color: tSwitchProvider
-                      ? const Color(0xFF282B30)
-                      : const Color(0xffd7d4cf),
+                  color: bgContainer,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(
                       12.0,
@@ -128,8 +133,7 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                         Text(
                           subject.subject,
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                             fontSize: 18.0,
                           ),
                         ),
@@ -149,7 +153,7 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                             Text(
                               subject.teacherName,
                               style: TextStyle(
-                                color: txt_Color,
+                                color: txtColor,
                                 fontSize: 15.0,
                               ),
                             ),
@@ -166,10 +170,20 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                           _onMenuItemSelected(value);
                         },
                         itemBuilder: (context) => [
-                          _buildPopupMenuItem("Editar", Icons.edit,
-                              Options.update.index, iconColor, txt_Color),
-                          _buildPopupMenuItem("Borrar", Icons.delete,
-                              Options.delete.index, iconColor, txt_Color),
+                          _buildPopupMenuItem(
+                            "Editar",
+                            Icons.edit,
+                            Options.update.index,
+                            iconColor,
+                            txtColor,
+                          ),
+                          _buildPopupMenuItem(
+                            "Borrar",
+                            Icons.delete,
+                            Options.delete.index,
+                            iconColor,
+                            txtColor,
+                          ),
                         ],
                       ),
                     ),

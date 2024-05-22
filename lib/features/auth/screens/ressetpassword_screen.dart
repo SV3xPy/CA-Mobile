@@ -106,26 +106,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                       ),
                       TextFormField(
                         controller: emailController,
-                        decoration: InputDecoration(
-                          label: const Text(
+                        decoration: const InputDecoration(
+                          label: Text(
                             "Correo electrónico",
                           ),
                           hintText: "Ingrese su correo electrónico",
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
                             color: Colors.black26,
                           ),
-                          // border: OutlineInputBorder(
-                          //   borderSide: const BorderSide(
-                          //     color: Colors.black12,
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
-                          // enabledBorder: OutlineInputBorder(
-                          //   borderSide: const BorderSide(
-                          //     color: Colors.black12,
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
                         ),
                       ),
                       const SizedBox(

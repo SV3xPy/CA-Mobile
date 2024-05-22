@@ -163,6 +163,11 @@ class AppTheme {
             0xffd7d4cf,
           ),
         ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(
+            0xFF9c306c,
+          ),
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity);
   }
 
@@ -302,6 +307,11 @@ class AppTheme {
         ),
         color: Color(
           0xFF282B30,
+        ),
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: Color(
+          0xFF63CF93,
         ),
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,

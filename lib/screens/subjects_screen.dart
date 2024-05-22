@@ -28,6 +28,11 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final datetimeBorder =
+        tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
@@ -40,9 +45,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen>
               AddSubjectScreen.routeName,
             );
           },
-          backgroundColor: tSwitchProvider
-              ? const Color(0xFF63CF93)
-              : const Color(0xFF9c306c),
+          backgroundColor: iconColor,
           child: const Icon(
             Icons.add,
             color: Colors.white,

@@ -35,6 +35,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   @override
   void dispose() {
     super.dispose();
+    nameController.dispose();
+    lastNameController.dispose();
+    birthDayController.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
 
@@ -118,16 +121,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                   errorText: "Por favor, ingresa tu nombre."),
                             ],
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             label: Text(
                               "Nombre",
                               style: TextStyle(
-                                color: txtColor,
+                                color: txt,
                               ),
                             ),
                             hintText: "Ingresa tu nombre",
                             hintStyle: TextStyle(
-                              color: txtColor,
+                              color: txt,
                             ),
                           ),
                         ),
@@ -145,16 +148,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                   errorText: "Por favor, ingresa tu apellido."),
                             ],
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             label: Text(
                               "Apellido",
                               style: TextStyle(
-                                color: txtColor,
+                                color: txt,
                               ),
                             ),
                             hintText: "Ingresa tu apellido",
                             hintStyle: TextStyle(
-                              color: txtColor,
+                              color: txt,
                             ),
                           ),
                         ),
@@ -178,15 +181,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                               Icons.calendar_today,
                               color: logo,
                             ),
-                            label: const Text(
+                            label: Text(
                               "Fecha de Nacimiento",
                               style: TextStyle(
-                                color: txtColor,
+                                color: txt,
                               ),
                             ),
                             hintText: "Selecciona tu fecha de nacimiento",
-                            hintStyle: const TextStyle(
-                              color: txtColor,
+                            hintStyle: TextStyle(
+                              color: txt,
                             ),
                           ),
                         ),
@@ -198,8 +201,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             ),
             actions: <Widget>[
               TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
+                style: ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(txt),
                 ),
                 child: const Text('Actualizar'),
                 onPressed: () {
@@ -207,8 +210,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 },
               ),
               TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
+                style: ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(txt),
                 ),
                 child: const Text('Salir'),
                 onPressed: () {
@@ -225,6 +228,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final bgContainer =
+        tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
+    final bgDialog =
+        tSwitchProvider ? const Color(0xFF12171D) : const Color(0xffede8e2);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -241,15 +251,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 highlightShape: BoxShape.rectangle,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  Color txtColor =
-                      tSwitchProvider ? Colors.white : Colors.black;
-                  Color? bgColor = tSwitchProvider
-                      ? const Color(0xFF12171D)
-                      : const Color(0xffede8e2);
-                  Color? iconColor = tSwitchProvider
-                      ? const Color(0xFF63CF93)
-                      : const Color(0xFF9c306c);
-                  _dialogBuilder(context, bgColor, txtColor, iconColor);
+                  _dialogBuilder(context, bgDialog, txtColor, iconColor);
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 12),
@@ -273,9 +275,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                             Text(
                               "data",
                               style: TextStyle(
-                                color: tSwitchProvider
-                                    ? const Color(0xFFFFFFFF)
-                                    : const Color(0xFF000000),
+                                color: txtColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -283,7 +283,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                             const SizedBox(
                               height: 8,
                             ),
-                            const Text(
+                            Text(
                               "Cambia tu información personal.",
                               style: TextStyle(
                                 fontSize: 15,
@@ -306,21 +306,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   ),
                   child: Icon(
                     tSwitchProvider ? Icons.nightlight : Icons.sunny,
-                    color: tSwitchProvider
-                        ? const Color(0xFF63CF93)
-                        : const Color(0xFF9c306c),
+                    color: iconColor,
                   ),
                 ),
                 title: Text(
                   "Cambiar tema",
                   style: TextStyle(
-                    color: tSwitchProvider
-                        ? const Color(0xFFFFFFFF)
-                        : const Color(0xFF000000),
+                    color: txtColor,
                     fontSize: 17,
                   ),
                 ),
-                subtitle: const Text(
+                subtitle: Text(
                   "Tema claro u oscuro",
                   style: TextStyle(
                     color: txtColor,
@@ -346,21 +342,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     child: Icon(
                       Icons.info_outline,
-                      color: tSwitchProvider
-                          ? const Color(0xFF63CF93)
-                          : const Color(0xFF9c306c),
+                      color: iconColor,
                     ),
                   ),
                   title: Text(
                     "Acerca De",
                     style: TextStyle(
-                      color: tSwitchProvider
-                          ? const Color(0xFFFFFFFF)
-                          : const Color(0xFF000000),
+                      color: txtColor,
                       fontSize: 17,
                     ),
                   ),
-                  subtitle: const Text(
+                  subtitle: Text(
                     "Información de la aplicación",
                     style: TextStyle(
                       color: txtColor,
@@ -390,21 +382,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     child: Icon(
                       Icons.logout,
-                      color: tSwitchProvider
-                          ? const Color(0xFF63CF93)
-                          : const Color(0xFF9c306c),
+                      color: iconColor,
                     ),
                   ),
                   title: Text(
                     "Salir",
                     style: TextStyle(
-                      color: tSwitchProvider
-                          ? const Color(0xFFFFFFFF)
-                          : const Color(0xFF000000),
+                      color: txtColor,
                       fontSize: 17,
                     ),
                   ),
-                  subtitle: const Text(
+                  subtitle: Text(
                     "Cerrar sesión",
                     style: TextStyle(
                       color: txtColor,
@@ -430,9 +418,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     Text(
                       "EduAgenda",
                       style: TextStyle(
-                        color: tSwitchProvider
-                            ? const Color(0xFFFFFFFF)
-                            : const Color(0xFF000000),
+                        color: txtColor,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),

@@ -29,6 +29,9 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    subjectNameController.dispose();
+    profNameController.dispose();
+    colorController.dispose();
   }
 
   Widget buildColorPicker() {
@@ -72,6 +75,11 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final datetimeBorder =
+        tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -98,7 +106,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                       keyboardType: TextInputType.name,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       style: TextStyle(
-                        color: tSwitchProvider ? Colors.white : Colors.black,
+                        color: txtColor,
                       ),
                       validator: FormBuilderValidators.compose(
                         [
@@ -111,13 +119,12 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                         label: Text(
                           "Nombre materia",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                           ),
                         ),
                         hintText: "Nombre de la materia",
                         hintStyle: TextStyle(
-                          color: tSwitchProvider ? Colors.white : Colors.black,
+                          color: txtColor,
                         ),
                       ),
                     ),
@@ -129,7 +136,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                       keyboardType: TextInputType.name,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       style: TextStyle(
-                        color: tSwitchProvider ? Colors.white : Colors.black,
+                        color: txtColor,
                       ),
                       validator: FormBuilderValidators.compose(
                         [
@@ -142,13 +149,12 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                         label: Text(
                           "Nombre profesor",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                           ),
                         ),
                         hintText: "Nombre del profesor",
                         hintStyle: TextStyle(
-                          color: tSwitchProvider ? Colors.white : Colors.black,
+                          color: txtColor,
                         ),
                       ),
                     ),
@@ -161,8 +167,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                         Text(
                           "Color",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),

@@ -4,7 +4,6 @@ import 'package:ca_mobile/common/widgets/recent_homeworks.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ca_mobile/colors.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +14,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -39,6 +44,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     //final usersAsyncValue = ref.watch(getUsersProvider);
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final bgContainer =
+        tSwitchProvider ? const Color(0xFF202328) : const Color(0xffdfdcd7);
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -48,23 +58,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               horizontal: 30.0,
             ),
             child: TextField(
-              style: const TextStyle(
+              style: TextStyle(
                 color: txtColor,
               ),
               cursorColor: txtColor,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                fillColor: tSwitchProvider
-                    ? const Color(0xFF202328)
-                    : const Color(0xffdfdcd7),
+                fillColor: bgContainer,
                 filled: true,
                 hintText: "Buscar",
-                hintStyle: const TextStyle(
+                hintStyle: TextStyle(
                   color: txtColor,
                 ),
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   Icons.search,
-                  color: txtColor,
+                  color: iconColor,
                   size: 26.0,
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -84,9 +92,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             // ),
             padding: const EdgeInsets.fromLTRB(15, 35, 15, 35),
             decoration: BoxDecoration(
-              color: tSwitchProvider
-                  ? const Color(0xFF202328)
-                  : const Color(0xffdfdcd7),
+              color: bgContainer,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(
                   50.0,
@@ -102,7 +108,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 Text(
                   "Alertas recientes",
                   style: TextStyle(
-                    color: tSwitchProvider ? Colors.white : Colors.black,
+                    color: txtColor,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -115,9 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   child: Text(
                     "Ver todos",
                     style: TextStyle(
-                      color: tSwitchProvider
-                          ? const Color(0xFF63CF93)
-                          : const Color(0xFF9c306c),
+                      color: iconColor,
                       fontSize: 15.0,
                     ),
                   ),
@@ -128,7 +132,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 Text(
                   "Tareas recientes",
                   style: TextStyle(
-                    color: tSwitchProvider ? Colors.white : Colors.black,
+                    color: txtColor,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -141,9 +145,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   child: Text(
                     "Ver todos",
                     style: TextStyle(
-                      color: tSwitchProvider
-                          ? const Color(0xFF63CF93)
-                          : const Color(0xFF9c306c),
+                      color: iconColor,
                       fontSize: 15.0,
                     ),
                   ),
