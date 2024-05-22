@@ -442,7 +442,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                     dummy(), //Cambiar por uno que recupere los datos de la materia.
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
-                                    return DropdownButton<Subject>(
+                                    return DropdownButton<SubjectModel>(
                                       icon: Icon(
                                         Icons.keyboard_arrow_down,
                                         color: iconColor,
@@ -451,9 +451,9 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                         height: 0,
                                       ),
                                       items: snapshot.data!
-                                          .map<DropdownMenuItem<Subject>>(
-                                        (Subject value) {
-                                          return DropdownMenuItem<Subject>(
+                                          .map<DropdownMenuItem<SubjectModel>>(
+                                        (SubjectModel value) {
+                                          return DropdownMenuItem<SubjectModel>(
                                             value: value,
                                             child: Text(
                                               "",
@@ -461,7 +461,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                           );
                                         },
                                       ).toList(),
-                                      onChanged: (Subject? newValue) {
+                                      onChanged: (SubjectModel? newValue) {
                                         /*
                                         _selectedSubject = newValue.nombreMateria
                                         subjectController.text = _selectedSubject*/

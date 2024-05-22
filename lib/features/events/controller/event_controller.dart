@@ -26,11 +26,20 @@ class EventController {
     EventModel? event = await eventRepository.getEventData();
     return event;
   }
+
   Future<void> deleteEvent() async {
     await eventRepository.deleteEvent();
   }
-    void saveEventDataToFirebase(BuildContext context, String title,
-      DateTime from, DateTime to, String subject, String description, String type, String color) {
+
+  void saveEventDataToFirebase(
+      BuildContext context,
+      String title,
+      DateTime from,
+      DateTime to,
+      String subject,
+      String description,
+      String type,
+      String color) {
     eventRepository.saveEventData(
         title: title,
         from: from,
@@ -42,8 +51,7 @@ class EventController {
         ref: ref,
         context: context);
   }
-   //Stream<EventModel> eventDataById(String userId) {
-    //return eventRepository.eventData(userId);
+  //Stream<EventModel> eventDataById(String userId) {
+  //return eventRepository.eventData(userId);
   //}
-
 }

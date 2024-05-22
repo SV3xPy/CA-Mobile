@@ -1,4 +1,3 @@
-import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/subject_model.dart';
@@ -80,7 +79,7 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
       shrinkWrap: true,
       itemCount: subjects.length,
       itemBuilder: (context, index) {
-        Subject subject = subjects[index];
+        SubjectModel subject = subjects[index];
         return Row(
           children: [
             Container(

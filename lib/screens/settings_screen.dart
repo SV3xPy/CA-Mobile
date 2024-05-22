@@ -206,7 +206,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                             "Por favor, ingresa tu nombre."),
                                   ],
                                 ),
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   label: Text(
                                     "Nombre",
                                     style: TextStyle(
@@ -217,18 +217,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                   hintStyle: TextStyle(
                                     color: txt,
                                   ),
-                                  // border: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: Colors.black12, // Default border color
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
-                                  // enabledBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: Colors.black12, // Default border color
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
                                 ),
                               ),
                               const SizedBox(
@@ -247,7 +235,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                             "Por favor, ingresa tu apellido."),
                                   ],
                                 ),
-                                decoration: const InputDecoration(
+                                decoration:  InputDecoration(
                                   label: Text(
                                     "Apellido",
                                     style: TextStyle(
@@ -258,18 +246,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                   hintStyle: TextStyle(
                                     color: txt,
                                   ),
-                                  // border: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: Colors.black12, // Default border color
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
-                                  // enabledBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: Colors.black12, // Default border color
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
                                 ),
                               ),
                               const SizedBox(
@@ -296,24 +272,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                     Icons.calendar_today,
                                     color: logo,
                                   ),
-                                  label: const Text(
+                                  label: Text(
                                     "Fecha de Nacimiento",
                                     style: TextStyle(
                                       color: txt,
                                     ),
                                   ),
                                   hintText: "Selecciona tu fecha de nacimiento",
-                                  hintStyle: const TextStyle(
+                                  hintStyle: TextStyle(
                                     color: txt,
                                   ),
-                                  // border: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(color: Colors.black12),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
-                                  // enabledBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(color: Colors.black12),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
                                 ),
                               ),
                             ],
@@ -322,23 +290,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       )
                     ],
                   ),
-                )
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStatePropertyAll(txt),
-                ),
-                child: const Text('Actualizar'),
-                onPressed: () {
-                  storeUserData();
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStatePropertyAll(txt),
+                  actions: <Widget>[
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(txt),
+                      ),
+                      child: const Text('Actualizar'),
+                      onPressed: () {
+                        storeUserData();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(txt),
                       ),
                       child: const Text('Salir'),
                       onPressed: () {
@@ -429,7 +394,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
-                              const Text(
+                              Text(
                                 "Cambia tu información personal.",
                                 style: TextStyle(
                                   fontSize: 15,

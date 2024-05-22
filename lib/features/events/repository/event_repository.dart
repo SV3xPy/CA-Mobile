@@ -24,8 +24,9 @@ class EventRepository {
   });
 
   Future<EventModel?> getEventData() async {
+    //Falta ponerle algo al doc para que traiga los datos de un evento en especifico
     var eventData =
-        await firestore.collection('events').doc(auth.currentUser?.uid).get();
+        await firestore.collection('users').doc(auth.currentUser?.uid).collection('events').doc().get();
     EventModel? event;
     if (eventData.data() != null) {
       event = EventModel.fromMap(eventData.data()!);

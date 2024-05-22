@@ -1,3 +1,4 @@
+import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -70,6 +71,13 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
         );
       },
     );
+  }
+  void storeSubjectData() async{
+    String subject = subjectNameController.text.trim();
+    String teacherName = profNameController.text.trim();
+    if(subject.isNotEmpty){
+      ref.read(subjectControllerProvider).saveSubjectDataToFirebase(context,subject,teacherName,color);
+    }
   }
 
   @override
@@ -206,7 +214,10 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          storeSubjectData();
+                          Navigator.of(context).pop();
+                        },
                         child: const Text(
                           "Guardar",
                         ),
