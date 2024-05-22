@@ -9,7 +9,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 class AddEventScreen extends ConsumerStatefulWidget {
   static const routeName = '/add_event';
-  final Event? event;
+  final EventModel? event;
   const AddEventScreen({super.key, this.event});
 
   @override
@@ -133,6 +133,17 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     }
   }
 
+  void storeEventData() async{
+    String title = eventTitleController.text.trim();
+    fromDate;
+    toDate;
+    String subject = subjectController.text.trim();
+    String type = typeController.text.trim();
+    String color = 'FFFFFF';
+    if (title.isNotEmpty){
+      //ref.read(eventControllerProvider).saveEventDataToFirebase
+    }
+  }
   Future dummy() async {}
 
   // Future<void> _selectDate(BuildContext context) async {
@@ -551,7 +562,9 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+
+                        },
                         child: const Text(
                           "Guardar",
                         ),

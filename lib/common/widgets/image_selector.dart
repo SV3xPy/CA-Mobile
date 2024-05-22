@@ -15,7 +15,9 @@ class ImageService {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return null;
       File img = File(image.path);
-      img = (await _cropImage(context, imageFile: img)) ?? img;
+      if (context.mounted) {
+        img = (await _cropImage(context, imageFile: img)) ?? img;
+      }
       onImageSelected(img);
       return img;
     } on PlatformException catch (e) {
@@ -24,7 +26,8 @@ class ImageService {
     }
   }
 
-  Future<File?> _cropImage(BuildContext context, {required File imageFile}) async {
+  Future<File?> _cropImage(BuildContext context,
+      {required File imageFile}) async {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       compressFormat: ImageCompressFormat.jpg,
@@ -42,7 +45,8 @@ class ImageService {
           context: context,
           presentStyle: CropperPresentStyle.dialog,
           boundary: const CroppieBoundary(width: 520, height: 520),
-          viewPort: const CroppieViewPort(width: 480, height: 480, type: 'circle'),
+          viewPort:
+              const CroppieViewPort(width: 480, height: 480, type: 'circle'),
           enableExif: true,
           enableZoom: true,
           showZoomer: true,

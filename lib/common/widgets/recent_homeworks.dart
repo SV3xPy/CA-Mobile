@@ -118,7 +118,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
     );
   }
 
-  _todoButton(Event event, bool tSwitch) {
+  _todoButton(EventModel event, bool tSwitch) {
     return ElevatedButton(
       onPressed: () {
         setState(() {

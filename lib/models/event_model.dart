@@ -1,4 +1,4 @@
-class Event {
+class EventModel {
   final String title;
   final DateTime from;
   final DateTime to;
@@ -7,7 +7,7 @@ class Event {
   final String type;
   final bool isDone;
 
-  Event({
+  EventModel({
     required this.title,
     required this.description,
     required this.from,
@@ -16,6 +16,29 @@ class Event {
     required this.subject,
     required this.isDone,
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'description': description,
+      'from': from,
+      'to': to,
+      'type': type,
+      'subject': subject,
+      'isDone': isDone
+    };
+  }
+
+  factory EventModel.fromMap(Map<String, dynamic> map) {
+    return EventModel(
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      from: map['from'] ?? '',
+      to: map['to'] ?? '',
+      type: map['type'] ?? '',
+      subject: map['subject'] ?? '',
+      isDone: map['isDone'] ?? ''
+    );
+  }
 }
 
 // List<Event> recentEvents = [

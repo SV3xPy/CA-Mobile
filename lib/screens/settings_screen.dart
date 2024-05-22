@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   static const routeName = '/settings';
@@ -51,20 +52,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: tSwitchProvider
-              ? ThemeData.dark().copyWith(
-                  colorScheme: darkColorScheme,
-                  dialogBackgroundColor: darkColorScheme.background,
-                )
-              : ThemeData.light().copyWith(
-                  colorScheme: lightColorScheme,
-                  dialogBackgroundColor: lightColorScheme.background,
-                ),
-          child: child!,
-        );
-      },
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -75,8 +62,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     }
   }
 
+  void storeUserData() async {
+    String name = nameController.text.trim();
+    FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+    String lastName = lastNameController.text.trim();
+    String? birthDate = selectedDate != null
+        ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+        : null;
+
+    if (name.isNotEmpty) {
+      ref.read(authControllerProvider).saveUserDataToFirebase(
+            context,
+            name,
+            _image,
+            lastName,
+            birthDate!,
+          );
+    }
+  }
+
   Future<void> _dialogBuilder(
       BuildContext context, Color? bg, Color txt, Color? logo) {
+    final user = FirebaseAuth.instance.currentUser;
+    final String? photoUrl = user?.photoURL;
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -86,10 +94,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             // Comienza el builder interno de FutureBuilder
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Comprueba si el Future aún se está cargando
-              return const CircularProgressIndicator(); 
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
-              return Text(
-                  'Error: ${snapshot.error}'); 
+              return Text('Error: ${snapshot.error}');
             } else {
               final userData = snapshot.data; // Accede a los datos del Future
               nameController.text = userData!.name;
@@ -121,17 +128,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                 });
                               });
                             },
-                            child: _image == null
-                                ?  CircleAvatar(
-                                    backgroundImage: CachedNetworkImageProvider(
-                                      userData.profilePic,
-                                    ),
-                                    radius: 64,
-                                  )
-                                : CircleAvatar(
-                                    backgroundImage: FileImage(_image!),
-                                    radius: 64,
-                                  ),
+                            child: CircleAvatar(
+                              radius: 64.0,
+                              backgroundImage: photoUrl != null
+                                  ? CachedNetworkImageProvider(photoUrl)
+                                  : null,
+                              child: photoUrl == null
+                                  ? CachedNetworkImage(
+                                      imageUrl:
+                                          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    )
+                                  : null,
+                            ),
                           ),
                           Positioned(
                             bottom: -10,
@@ -144,6 +156,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                       .selectImage(context, source, (img) {
                                     setState(() {
                                       _image = img;
+                                      print(_image);
                                       Navigator.of(context).pop();
                                     });
                                   });
@@ -274,7 +287,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                 ),
                                 onTap: () {
                                   _selectDate(context);
-                                }, //_selectDate(context),
+                                },
                                 decoration: InputDecoration(
                                   icon: Icon(
                                     Icons.calendar_today,
@@ -313,6 +326,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                       child: const Text('Actualizar'),
                       onPressed: () {
+                        storeUserData();
                         Navigator.of(context).pop();
                       },
                     ),

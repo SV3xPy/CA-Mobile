@@ -74,7 +74,6 @@ class AuthRepository {
 
       final userCredential = await auth.signInWithProvider(_googleAuthProvider);
       if (userCredential.user != null) {
-        print("ALGGG");
         if (userCredential.additionalUserInfo!.isNewUser) {
           userCredential.user!.sendEmailVerification();
           }

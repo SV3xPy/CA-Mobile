@@ -18,8 +18,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
   DateFormat dateFormat = DateFormat("hh:mm a");
 
   @override
-  void initState() {
-    // TODO: implement initState
+  void initState() { 
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
