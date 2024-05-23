@@ -1,4 +1,5 @@
 import 'package:ca_mobile/common/utils/utils.dart';
+import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:ca_mobile/models/subject_model.dart';
@@ -422,6 +423,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                       children: [
                         Expanded(
                           child: TextFormField(
+                            controller: subjectController,
                             readOnly: true,
                             style: TextStyle(
                               color: txtColor,
@@ -438,11 +440,15 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                 color: txtColor,
                               ),
                               suffixIcon: FutureBuilder(
-                                future:
-                                    dummy(), //Cambiar por uno que recupere los datos de la materia.
+                                future: ref
+                                    .read(subjectControllerProvider)
+                                    .getAllSubjectData(), //Cambiar por uno que recupere los datos de la materia.
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     return DropdownButton<SubjectModel>(
+                                      padding: const EdgeInsets.only(
+                                        right: 13,
+                                      ),
                                       icon: Icon(
                                         Icons.keyboard_arrow_down,
                                         color: iconColor,
@@ -456,15 +462,15 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                                           return DropdownMenuItem<SubjectModel>(
                                             value: value,
                                             child: Text(
-                                              "",
+                                              value.subject,
                                             ), //Colocar dentro del widget value.nombreMateria!
                                           );
                                         },
                                       ).toList(),
                                       onChanged: (SubjectModel? newValue) {
-                                        /*
-                                        _selectedSubject = newValue.nombreMateria
-                                        subjectController.text = _selectedSubject*/
+                                        _selectedSubject = newValue!.subject;
+                                        subjectController.text =
+                                            _selectedSubject!;
                                       },
                                     );
                                   } else if (snapshot.hasError) {
