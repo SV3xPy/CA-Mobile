@@ -161,7 +161,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     String subject = subjectController.text.trim();
     String type = typeController.text.trim();
     String color = 'FFFFFF';
-    String description = 'prueba';
+    String description = descriptionController.text.trim();
     if (title.isNotEmpty) {
       ref.read(eventControllerProvider).saveEventDataToFirebase(
           context, title, fromDate, toDate, subject, description, type, color);

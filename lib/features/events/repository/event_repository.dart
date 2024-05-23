@@ -1,6 +1,7 @@
 import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/models/event_model.dart';
+import 'package:ca_mobile/screens/calendar_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class EventRepository {
           .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const BottomNavigation(),
+                builder: (context) => const CalendarScreen(),
               ),
               (route) => false));
     } catch (e) {
