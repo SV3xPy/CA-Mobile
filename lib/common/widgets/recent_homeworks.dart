@@ -116,7 +116,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
     );
   }
 
-  _todoButton(Event event, Color iconColor) {
+  _todoButton(EventModel event, Color iconColor) {
     return ElevatedButton(
       onPressed: () {
         setState(() {

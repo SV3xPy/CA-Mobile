@@ -74,7 +74,6 @@ class AuthRepository {
 
       final userCredential = await auth.signInWithProvider(_googleAuthProvider);
       if (userCredential.user != null) {
-        print("ALGGG");
         if (userCredential.additionalUserInfo!.isNewUser) {
           userCredential.user!.sendEmailVerification();
           }
@@ -206,7 +205,7 @@ class AuthRepository {
               profilePic,
             );
       }
-
+      FirebaseAuth.instance.currentUser!.updatePhotoURL(photoURL);
       var user = UserModel(
         name: name,
         lastName: lastName,
@@ -215,6 +214,7 @@ class AuthRepository {
         profilePic: photoURL,
         email: auth.currentUser!.email!,
         classIDs: [],
+        isPremium: false
       );
 
       await firestore.collection('users').doc(uid).set(user.toMap()).then(
@@ -235,11 +235,13 @@ class AuthRepository {
 
   Future<void> signOut() async {
     //Primero pasamos no estar en linea
+    /*
     await firestore.collection('users').doc(auth.currentUser!.uid).update(
       {
         'isOnline': false,
       },
     );
+    */
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userData');
     final cacheDir = await getTemporaryDirectory();

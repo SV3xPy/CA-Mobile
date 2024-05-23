@@ -146,12 +146,14 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
                                   await ref
                                       .read(authControllerProvider)
                                       .sendVerificationMail();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Se ha enviado un correo de verificación.'),
-                                    ),
-                                  );
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Se ha enviado un correo de verificación.'),
+                                      ),
+                                    );
+                                  }
                                   _startTimer();
                                 },
                           child: const Text(
