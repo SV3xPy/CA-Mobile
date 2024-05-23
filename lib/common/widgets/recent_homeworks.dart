@@ -1,8 +1,6 @@
-import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -32,6 +30,11 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final bgContainer =
+        tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
     return ListView.builder(
       shrinkWrap: true,
       itemCount: 2, //recentEvents.length,
@@ -56,9 +59,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                 height: 100.0,
                 width: 341.0,
                 decoration: BoxDecoration(
-                  color: tSwitchProvider
-                      ? const Color(0xFF282B30)
-                      : const Color(0xffd7d4cf),
+                  color: bgContainer,
                   borderRadius: BorderRadius.circular(
                     12.0,
                   ),
@@ -74,8 +75,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                           //event.title,
                           "",
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
                           ),
@@ -87,9 +87,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                           children: <Widget>[
                             Icon(
                               Icons.access_time,
-                              color: tSwitchProvider
-                                  ? const Color(0xFF63CF93)
-                                  : const Color(0xFF9c306c),
+                              color: iconColor,
                               size: 17.0,
                             ),
                             const SizedBox(
@@ -97,7 +95,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                             ),
                             Text(
                               "", //,${DateTime.now().weekday == event.dueTime.weekday ? "Hoy" : DateFormat.EEEE().format(event.dueTime)}, ${dateFormat.format(event.dueTime)}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: txtColor,
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.w600,
@@ -107,7 +105,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
                         ),
                       ],
                     ),
-                    //_todoButton(event, tSwitchProvider)
+                    //_todoButton(event, iconColor)
                   ],
                 ),
               ),
@@ -118,7 +116,7 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
     );
   }
 
-  _todoButton(Event event, bool tSwitch) {
+  _todoButton(EventModel event, Color iconColor) {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -129,17 +127,12 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
         shape: MaterialStateProperty.all(
           CircleBorder(
             side: BorderSide(
-              color:
-                  tSwitch ? const Color(0xFF63CF93) : const Color(0xFF9c306c),
+              color: iconColor,
             ),
           ),
         ),
         backgroundColor: MaterialStateProperty.all(
-          event.isDone
-              ? tSwitch
-                  ? const Color(0xFF63CF93)
-                  : const Color(0xFF9c306c)
-              : Colors.transparent,
+          event.isDone ? iconColor : Colors.transparent,
         ),
       ),
       child: event.isDone

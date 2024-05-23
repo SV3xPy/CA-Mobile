@@ -1,42 +1,54 @@
-class Subject {
-  final String subject;
-  final String type;
-  final String teacherName;
-  final DateTime time;
-  bool isPassed = false;
-  bool isHappening = false;
+import 'package:flutter/material.dart';
 
-  Subject({
+class SubjectModel {
+  final String subject;
+  final String teacherName;
+  final Color color;
+
+  SubjectModel({
+    required this.color,
     required this.subject,
-    required this.type,
     required this.teacherName,
-    required this.time,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'subject': subject,
+      'teacherName': teacherName,
+      'color': color.value.toRadixString(16).padLeft(8, '0'),
+    };
+  }
+
+  factory SubjectModel.fromMap(Map<String, dynamic> map) {
+    int? colorInt = int.tryParse(map['color']);
+    Color? color = colorInt != null ? Color(colorInt) : Colors.white;
+    return SubjectModel(
+      subject: map['subject'] ?? '',
+      teacherName: map['teacherName'] ?? '',
+      color: color,
+    );
+  }
 }
 
-List<Subject> subjects = [
-  Subject(
+List<SubjectModel> subjects = [
+  SubjectModel(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
-  Subject(
+  SubjectModel(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
-  Subject(
+  SubjectModel(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
-  Subject(
+  SubjectModel(
     subject: "Math",
-    type: "Online Class",
     teacherName: "Lauren Romanov",
-    time: DateTime.now(),
+    color: const Color(0xFF000000),
   ),
 ];

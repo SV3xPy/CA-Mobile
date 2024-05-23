@@ -15,7 +15,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
     with WidgetsBindingObserver {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -29,6 +28,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final datetimeBorder =
+        tSwitchProvider ? const Color(0xFF12171D) : const Color(0xffede8e2);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
@@ -41,9 +45,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
               AddEventScreen.routeName,
             );
           },
-          backgroundColor: tSwitchProvider
-              ? const Color(0xFF63CF93)
-              : const Color(0xFF9c306c),
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -59,37 +60,31 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
           firstDayOfWeek: 1,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
-          backgroundColor: tSwitchProvider
-              ? const Color(0xFF12171D)
-              : const Color(0xffede8e2),
+          backgroundColor: datetimeBorder,
           headerStyle: CalendarHeaderStyle(
-            backgroundColor: tSwitchProvider
-                ? const Color(0xFF12171D)
-                : const Color(0xffede8e2),
+            backgroundColor: datetimeBorder,
             textStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
             textAlign: TextAlign.center,
           ),
           viewHeaderStyle: ViewHeaderStyle(
             dayTextStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
             dateTextStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
           ),
-          cellBorderColor: tSwitchProvider ? Colors.white : Colors.black,
+          cellBorderColor: txtColor,
           timeSlotViewSettings: TimeSlotViewSettings(
             timeTextStyle: TextStyle(
-              color: tSwitchProvider ? Colors.white : Colors.black,
+              color: txtColor,
             ),
             startHour: 0,
             endHour: 24,
           ),
-          todayHighlightColor: tSwitchProvider
-              ? const Color(0xFF63CF93)
-              : const Color(0xFF9c306c),
+          todayHighlightColor: iconColor,
           showDatePickerButton: true,
           showNavigationArrow: true,
           showTodayButton: true,

@@ -23,7 +23,6 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _startVerificationTimer();
   }
@@ -46,7 +45,9 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => const UserInfoScreen(notEmailLogin: false,),
+              builder: (context) => const UserInfoScreen(
+                notEmailLogin: false,
+              ),
             ),
             (route) => false,
           );
@@ -145,12 +146,14 @@ class _VerifyingScreenState extends ConsumerState<VerifyingScreen>
                                   await ref
                                       .read(authControllerProvider)
                                       .sendVerificationMail();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Se ha enviado un correo de verificación.'),
-                                    ),
-                                  );
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Se ha enviado un correo de verificación.'),
+                                      ),
+                                    );
+                                  }
                                   _startTimer();
                                 },
                           child: const Text(

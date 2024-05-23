@@ -53,16 +53,26 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
   }
 
   PopupMenuItem _buildPopupMenuItem(
-      String title, IconData iconData, int position) {
+    String title,
+    IconData iconData,
+    int position,
+    Color iconColor,
+    Color txtColor,
+  ) {
     return PopupMenuItem(
       value: position,
       child: Row(
         children: [
           Icon(
             iconData,
-            color: Colors.grey,
+            color: iconColor,
           ),
-          Text(title),
+          Text(
+            title,
+            style: TextStyle(
+              color: txtColor,
+            ),
+          ),
         ],
       ),
     );
@@ -80,6 +90,10 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
+
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -98,7 +112,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               Text(
                 "EduAgenda",
                 style: TextStyle(
-                  color: tSwitchProvider ? Colors.white : Colors.black,
+                  color: txtColor,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -111,11 +125,8 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
                 _onMenuItemSelected(value);
               },
               itemBuilder: (context) => [
-                _buildPopupMenuItem(
-                  "Ajustes",
-                  Icons.settings,
-                  Options.ajustes.index,
-                ),
+                _buildPopupMenuItem("Ajustes", Icons.settings,
+                    Options.ajustes.index, iconColor, txtColor),
               ],
             ),
           ],
@@ -174,7 +185,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
           onTap: (int tab) {
             setState(() {
               _selectedTab = tab;
-              if (tab == 0 || tab == 1) {
+              if (tab == 0 || tab == 1 || tab == 2) {
                 _currentPage = _pages[tab];
               }
             });

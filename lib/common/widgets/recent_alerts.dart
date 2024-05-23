@@ -18,8 +18,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
   DateFormat dateFormat = DateFormat("hh:mm a");
 
   @override
-  void initState() {
-    // TODO: implement initState
+  void initState() { 
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -37,6 +36,11 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
         tSwitchProvider ? const Color(0xFFF5C35A) : const Color(0xffBB342F);
     Color? alertUp =
         tSwitchProvider ? const Color(0xFFFA8334) : const Color(0xFF119822);
+    final iconColor =
+        tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
+    final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    final bgContainer =
+        tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
     return ListView.builder(
       shrinkWrap: true,
       itemCount: recentAlerts.length,
@@ -58,9 +62,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
               height: 130.0,
               width: 15.0,
               decoration: BoxDecoration(
-                color: tSwitchProvider
-                    ? const Color(0xFF63CF93)
-                    : const Color(0xFF9c306c),
+                color: iconColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(
                     30.0,
@@ -85,9 +87,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                 height: 130.0,
                 width: 326.0,
                 decoration: BoxDecoration(
-                  color: tSwitchProvider
-                      ? const Color(0xFF282B30)
-                      : const Color(0xffd7d4cf),
+                  color: bgContainer,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(
                       12.0,
@@ -105,8 +105,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                         Text(
                           alert.title,
                           style: TextStyle(
-                            color:
-                                tSwitchProvider ? Colors.white : Colors.black,
+                            color: txtColor,
                             fontSize: 18.0,
                           ),
                         ),
@@ -114,9 +113,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                           children: <Widget>[
                             Icon(
                               Icons.access_time,
-                              color: tSwitchProvider
-                                  ? const Color(0xFF63CF93)
-                                  : const Color(0xFF9c306c),
+                              color: iconColor,
                               size: 17.0,
                             ),
                             const SizedBox(
@@ -124,7 +121,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                             ),
                             Text(
                               "${DateTime.now().weekday == alert.time.weekday ? "Hoy" : DateFormat.EEEE().format(alert.time)}, ${dateFormat.format(alert.time)}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: txtColor,
                                 fontSize: 15.0,
                               ),
@@ -138,9 +135,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                           children: <Widget>[
                             Icon(
                               Icons.bookmark,
-                              color: tSwitchProvider
-                                  ? const Color(0xFF63CF93)
-                                  : const Color(0xFF9c306c),
+                              color: iconColor,
                               size: 17.0,
                             ),
                             const SizedBox(
@@ -148,7 +143,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                             ),
                             Text(
                               alert.subject,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: txtColor,
                                 fontSize: 15.0,
                               ),
@@ -174,9 +169,7 @@ class _RecentAlertsState extends ConsumerState<RecentAlerts>
                               Text(
                                 "$hoursLeft",
                                 style: TextStyle(
-                                  color: tSwitchProvider
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color: txtColor,
                                   fontSize: 26.0,
                                   fontWeight: FontWeight.w600,
                                 ),

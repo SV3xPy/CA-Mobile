@@ -17,11 +17,11 @@ const blackColor = Colors.black;
 const cardColor = Color(0xFF282830);
 const hourColor = Color(0xFFF5C35A);
 const bgColor = Color(0xFF343537);
-const txtColor = Color(0XFF6C7174);
-const calendarDay = TextStyle(
-  color: txtColor,
-  fontSize: 16.0,
-);
+//const txtColor = Color(0XFF6C7174);
+// const calendarDay = TextStyle(
+//   color: txtColor,
+//   fontSize: 16.0,
+// );
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
