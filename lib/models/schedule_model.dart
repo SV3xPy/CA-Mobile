@@ -1,11 +1,11 @@
-class SubjectTime {
-  final DateTime day;
+class Schedule {
+  final int day;
   final String subject;
   final DateTime from;
   final DateTime to;
   final String classroom;
 
-  SubjectTime({
+  Schedule({
     required this.day,
     required this.subject,
     required this.from,
