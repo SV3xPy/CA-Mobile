@@ -54,19 +54,21 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
           title: const Text(
             "Selecciona un color",
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildColorPicker(),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Seleccionar",
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildColorPicker(),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Seleccionar",
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -216,7 +218,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                       child: ElevatedButton(
                         onPressed: () {
                           storeSubjectData();
-                          Navigator.of(context).pop();
+                          //Navigator.of(context).pop();
                         },
                         child: const Text(
                           "Guardar",

@@ -14,7 +14,8 @@ enum Options {
 
 class BottomNavigation extends ConsumerStatefulWidget {
   static const routeName = '/main';
-  const BottomNavigation({super.key});
+  final int initialTabIndex; // Parámetro para el índice de la pestaña inicial
+  const BottomNavigation({super.key, this.initialTabIndex = 0});
 
   @override
   ConsumerState<BottomNavigation> createState() => _BottomNavigationState();
@@ -41,7 +42,9 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
       _scheduleScreen,
       _subjectsScreen,
     ];
-    _currentPage = _homeScreen;
+    _currentPage = _pages[widget
+        .initialTabIndex]; // Usar el índice inicial de la pestaña para establecer la página actual
+    _selectedTab = widget.initialTabIndex;
     tabBarController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addObserver(this);
   }
