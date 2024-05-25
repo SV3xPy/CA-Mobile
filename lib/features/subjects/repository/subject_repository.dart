@@ -1,4 +1,5 @@
 import 'package:ca_mobile/common/utils/utils.dart';
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
 import 'package:ca_mobile/common/widgets/subjects_list.dart';
 import 'package:ca_mobile/models/subject_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -90,7 +91,7 @@ class SubjectRepository {
           .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const SubjectsList(),
+                builder: (context) => const BottomNavigation(initialTabIndex: 2,),
               ),
               (route) => false));
     } catch (e) {

@@ -137,7 +137,7 @@ class EventRepository {
           .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const BottomNavigation(),
+                builder: (context) => const BottomNavigation(initialTabIndex: 1,),
               ),
               (route) => false));
     } catch (e) {
