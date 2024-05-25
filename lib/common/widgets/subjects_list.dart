@@ -1,3 +1,5 @@
+import 'package:ca_mobile/common/widgets/loader.dart';
+import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/subject_model.dart';
@@ -75,123 +77,135 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final bgContainer =
         tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: subjects.length,
-      itemBuilder: (context, index) {
-        SubjectModel subject = subjects[index];
-        return Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(
-                bottom: 30.0,
-              ),
-              height: 100.0,
-              width: 15.0,
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(
-                    30.0,
-                  ),
-                  bottomLeft: Radius.circular(
-                    30.0,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(
-                  bottom: 30.0,
-                ),
-                padding: const EdgeInsets.fromLTRB(
-                  20.0,
-                  20.0,
-                  20.0,
-                  10.0,
-                ),
-                height: 100.0,
-                width: 326.0,
-                decoration: BoxDecoration(
-                  color: bgContainer,
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(
-                      12.0,
+    return FutureBuilder(
+      future: ref.read(subjectControllerProvider).getAllSubjectData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              List<SubjectModel> subject = snapshot.data!;
+              return Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 30.0,
                     ),
-                    bottomRight: Radius.circular(
-                      12.0,
+                    height: 100.0,
+                    width: 15.0,
+                    decoration: BoxDecoration(
+                      color: subject[index].color,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(
+                          30.0,
+                        ),
+                        bottomLeft: Radius.circular(
+                          30.0,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          subject.subject,
-                          style: TextStyle(
-                            color: txtColor,
-                            fontSize: 18.0,
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        bottom: 30.0,
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        20.0,
+                        20.0,
+                        20.0,
+                        10.0,
+                      ),
+                      height: 100.0,
+                      width: 326.0,
+                      decoration: BoxDecoration(
+                        color: bgContainer,
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(
+                            12.0,
+                          ),
+                          bottomRight: Radius.circular(
+                            12.0,
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person,
-                              color: iconColor,
-                              size: 17.0,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              subject.teacherName,
-                              style: TextStyle(
-                                color: txtColor,
-                                fontSize: 15.0,
+                      ),
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                subject[index].subject,
+                                style: TextStyle(
+                                  color: txtColor,
+                                  fontSize: 18.0,
+                                ),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Positioned(
-                      right: 0.0,
-                      bottom: 35,
-                      left: 280,
-                      child: PopupMenuButton(
-                        onSelected: (value) {
-                          _onMenuItemSelected(value);
-                        },
-                        itemBuilder: (context) => [
-                          _buildPopupMenuItem(
-                            "Editar",
-                            Icons.edit,
-                            Options.update.index,
-                            iconColor,
-                            txtColor,
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    color: iconColor,
+                                    size: 17.0,
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    subject[index].teacherName,
+                                    style: TextStyle(
+                                      color: txtColor,
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
-                          _buildPopupMenuItem(
-                            "Borrar",
-                            Icons.delete,
-                            Options.delete.index,
-                            iconColor,
-                            txtColor,
+                          Positioned(
+                            right: 0.0,
+                            bottom: 35,
+                            left: 280,
+                            child: PopupMenuButton(
+                              onSelected: (value) {
+                                _onMenuItemSelected(value);
+                                print(
+                                    "Esto es un color: ${subject[index].color}");
+                              },
+                              itemBuilder: (context) => [
+                                _buildPopupMenuItem(
+                                  "Editar",
+                                  Icons.edit,
+                                  Options.update.index,
+                                  iconColor,
+                                  txtColor,
+                                ),
+                                _buildPopupMenuItem(
+                                  "Borrar",
+                                  Icons.delete,
+                                  Options.delete.index,
+                                  iconColor,
+                                  txtColor,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        }
+        return const Loader();
       },
     );
   }

@@ -18,6 +18,13 @@ final eventRepositoryProvider = Provider(
 class EventRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+  DateTime selectedDay = DateTime.now();
+
+  void setDate(DateTime date) {
+    print("Fecha en Repository: $date");
+    selectedDay = date;
+    print("Se cambia la fecha: $selectedDay");
+  }
 
   EventRepository({
     required this.firestore,
@@ -26,17 +33,78 @@ class EventRepository {
 
   Future<EventModel?> getEventData() async {
     //Falta ponerle algo al doc para que traiga los datos de un evento en especifico
-    var eventData =
-        await firestore.collection('users').doc(auth.currentUser?.uid).collection('events').doc().get();
+    var eventData = await firestore
+        .collection('users')
+        .doc(auth.currentUser?.uid)
+        .collection('events')
+        .doc()
+        .get();
     EventModel? event;
     if (eventData.data() != null) {
       event = EventModel.fromMap(eventData.data()!);
     }
     return event;
   }
-  Future<void> deleteEvent() async {
 
+  Future<List<EventModel>> getEventsByDate() async {
+    String? uid = auth.currentUser?.uid;
+
+    DateTime startOfDay = DateTime(
+      selectedDay.year,
+      selectedDay.month,
+      selectedDay.day,
+      0,
+      0,
+      0,
+    );
+
+    DateTime endOfDay = DateTime(
+      selectedDay.year,
+      selectedDay.month,
+      selectedDay.day,
+      23,
+      59,
+      59,
+    );
+
+    Timestamp startTimestamp = Timestamp.fromDate(startOfDay);
+    Timestamp endTimestamp = Timestamp.fromDate(endOfDay);
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('users')
+        .doc(uid!)
+        .collection('events')
+        .where('from', isLessThanOrEqualTo: endTimestamp)
+        .where('to', isGreaterThanOrEqualTo: startTimestamp)
+        .get();
+
+    List<EventModel> events = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return EventModel.fromMap(data);
+    }).toList();
+
+    return events;
   }
+
+  Future<void> deleteEvent() async {}
+
+  Future<List<EventModel>> getAllEventsData() async {
+    String? uid = auth.currentUser?.uid;
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('users')
+        .doc(uid!)
+        .collection('events')
+        .get();
+
+    List<EventModel> events = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return EventModel.fromMap(data);
+    }).toList();
+
+    return events;
+  }
+
   void saveEventData({
     required String title,
     required DateTime from,
@@ -58,7 +126,7 @@ class EventRepository {
           to: to,
           type: type,
           subject: subject,
-          color:color,
+          color: color,
           isDone: false);
       await firestore
           .collection('users')
@@ -69,7 +137,7 @@ class EventRepository {
           .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const CalendarScreen(),
+                builder: (context) => const BottomNavigation(),
               ),
               (route) => false));
     } catch (e) {

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EventModel {
   final String title;
   final DateTime from;
@@ -35,12 +37,12 @@ class EventModel {
     return EventModel(
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      from: map['from'] ?? '',
-      to: map['to'] ?? '',
+      from: (map['from'] as Timestamp).toDate(),
+      to: (map['to'] as Timestamp).toDate(),
       type: map['type'] ?? '',
       subject: map['subject'] ?? '',
       isDone: map['isDone'] ?? '',
-      color: map['color']?? '',
+      color: map['color'] ?? '',
     );
   }
 }

@@ -29,26 +29,3 @@ class SubjectModel {
     );
   }
 }
-
-List<SubjectModel> subjects = [
-  SubjectModel(
-    subject: "Math",
-    teacherName: "Lauren Romanov",
-    color: const Color(0xFF000000),
-  ),
-  SubjectModel(
-    subject: "Math",
-    teacherName: "Lauren Romanov",
-    color: const Color(0xFF000000),
-  ),
-  SubjectModel(
-    subject: "Math",
-    teacherName: "Lauren Romanov",
-    color: const Color(0xFF000000),
-  ),
-  SubjectModel(
-    subject: "Math",
-    teacherName: "Lauren Romanov",
-    color: const Color(0xFF000000),
-  ),
-];
