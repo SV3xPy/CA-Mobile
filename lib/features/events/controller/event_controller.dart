@@ -27,6 +27,16 @@ class EventController {
     return event;
   }
 
+  Future<List<EventModel>> getAllEventsData() async {
+    List<EventModel> events = await eventRepository.getAllEventsData();
+    return events;
+  }
+
+  Future<List<EventModel>> getEventsByDate() async {
+    List<EventModel> eventsDate = await eventRepository.getEventsByDate();
+    return eventsDate;
+  }
+
   Future<void> deleteEvent() async {
     await eventRepository.deleteEvent();
   }
@@ -50,6 +60,11 @@ class EventController {
         color: color,
         ref: ref,
         context: context);
+  }
+
+  void setDate(DateTime date) {
+    print("Fecha establecida en controlaador: $date");
+    eventRepository.setDate(date);
   }
   //Stream<EventModel> eventDataById(String userId) {
   //return eventRepository.eventData(userId);

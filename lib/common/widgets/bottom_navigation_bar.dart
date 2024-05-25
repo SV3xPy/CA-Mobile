@@ -49,6 +49,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
   @override
   void dispose() {
     super.dispose();
+    tabBarController.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
 
