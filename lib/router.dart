@@ -9,6 +9,7 @@ import 'package:ca_mobile/features/auth/screens/verifying_screen.dart';
 import 'package:ca_mobile/features/events/screen/add_event_screen.dart';
 import 'package:ca_mobile/features/events/screen/event_details.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
+import 'package:ca_mobile/features/schedule/screen/add_schedule_screen.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:ca_mobile/screens/settings_screen.dart';
@@ -61,6 +62,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AddSubjectScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const AddSubjectScreen(),
+      );
+    case AddScheduleScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const AddScheduleScreen(),
       );
     case EventDetailsScreen.routeName:
       final event = settings.arguments as EventModel;

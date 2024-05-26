@@ -67,4 +67,9 @@ class Utils {
 
     return time;
   }
+
+  static String formatDateToISO(DateTime date) {
+    final DateFormat formatter = DateFormat("yyyyMMdd'T'HHmmss'Z'");
+    return formatter.format(date.toUtc());
+  }
 }

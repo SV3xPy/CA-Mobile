@@ -1,15 +1,15 @@
-class Schedule {
-  final int day;
+class ScheduleModel {
   final String subject;
   final DateTime from;
   final DateTime to;
   final String classroom;
+  final String recurrenceRule;
 
-  Schedule({
-    required this.day,
+  ScheduleModel({
     required this.subject,
     required this.from,
     required this.to,
     required this.classroom,
+    required this.recurrenceRule,
   });
 }
