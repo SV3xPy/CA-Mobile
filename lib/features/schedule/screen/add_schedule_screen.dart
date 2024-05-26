@@ -576,11 +576,12 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                                   .map((day) => _daysMap[day]!)
                                   .toList();
                               byDay = abbreviatedDays.join(',');
-                              until = Utils.formatDateToISO(fromDate);
+                              until = Utils.formatDateToISO(toDate);
                               recurrenceRule =
                                   "FREQ=WEEKLY;INTERVAL=1;BYDAY=$byDay;UNTIL=$until";
                               print(abbreviatedDays);
                               print(byDay);
+                              print(toDate);
                               print(until);
                               print(recurrenceRule);
                             },
