@@ -1,4 +1,4 @@
-import 'package:ca_mobile/features/events/screen/add_event_screen.dart';
+import 'package:ca_mobile/features/schedule/screen/add_schedule_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +42,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
           onPressed: () {
             Navigator.pushNamed(
               context,
-              AddEventScreen.routeName,
+              AddScheduleScreen.routeName,
             );
           },
           child: const Icon(
@@ -58,6 +58,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
         child: SfCalendar(
           view: CalendarView.week,
           firstDayOfWeek: 1,
+          headerHeight: 0,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
           backgroundColor: datetimeBorder,
@@ -85,9 +86,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
             endHour: 24,
           ),
           todayHighlightColor: iconColor,
-          showDatePickerButton: true,
-          showNavigationArrow: true,
-          showTodayButton: true,
         ),
       ),
     );
