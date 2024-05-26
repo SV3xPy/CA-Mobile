@@ -1,5 +1,10 @@
+import 'package:ca_mobile/common/widgets/error.dart';
+import 'package:ca_mobile/common/widgets/loader.dart';
+import 'package:ca_mobile/features/schedule/controller/schedule_controller.dart';
 import 'package:ca_mobile/features/schedule/screen/add_schedule_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
+import 'package:ca_mobile/models/schedule_data_source.dart';
+import 'package:ca_mobile/models/schedule_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -55,37 +60,76 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
         padding: const EdgeInsets.only(
           bottom: 70,
         ),
-        child: SfCalendar(
-          view: CalendarView.week,
-          firstDayOfWeek: 1,
-          headerHeight: 0,
-          initialDisplayDate: DateTime.now(),
-          initialSelectedDate: DateTime.now(),
-          backgroundColor: datetimeBorder,
-          headerStyle: CalendarHeaderStyle(
-            backgroundColor: datetimeBorder,
-            textStyle: TextStyle(
-              color: txtColor,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          viewHeaderStyle: ViewHeaderStyle(
-            dayTextStyle: TextStyle(
-              color: txtColor,
-            ),
-            dateTextStyle: TextStyle(
-              color: txtColor,
-            ),
-          ),
-          cellBorderColor: txtColor,
-          timeSlotViewSettings: TimeSlotViewSettings(
-            timeTextStyle: TextStyle(
-              color: txtColor,
-            ),
-            startHour: 0,
-            endHour: 24,
-          ),
-          todayHighlightColor: iconColor,
+        child: FutureBuilder(
+          future: ref.read(scheduleControllerProvider).getAllScheduleData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<ScheduleModel> schedules = snapshot.data!;
+              for (var schedule in schedules) {
+                print(
+                    'Schedule: ${schedule.subject}, Start: ${schedule.from}, End: ${schedule.to}');
+              }
+              return SfCalendar(
+                view: CalendarView.week,
+                dataSource: ScheduleDataSource(schedules),
+                appointmentBuilder: (context, calendarAppointmentDetails) {
+                  final schedule =
+                      calendarAppointmentDetails.appointments.first;
+                  return Container(
+                    width: calendarAppointmentDetails.bounds.width,
+                    height: calendarAppointmentDetails.bounds.height,
+                    decoration: BoxDecoration(
+                      color: iconColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        schedule.subject,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: txtColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                firstDayOfWeek: 1,
+                headerHeight: 0,
+                initialDisplayDate: DateTime.now(),
+                initialSelectedDate: DateTime.now(),
+                backgroundColor: datetimeBorder,
+                headerStyle: CalendarHeaderStyle(
+                  backgroundColor: datetimeBorder,
+                  textStyle: TextStyle(
+                    color: txtColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                viewHeaderStyle: ViewHeaderStyle(
+                  dayTextStyle: TextStyle(
+                    color: txtColor,
+                  ),
+                  dateTextStyle: TextStyle(
+                    color: txtColor,
+                  ),
+                ),
+                cellBorderColor: txtColor,
+                timeSlotViewSettings: TimeSlotViewSettings(
+                  timeTextStyle: TextStyle(
+                    color: txtColor,
+                  ),
+                  startHour: 0,
+                  endHour: 24,
+                ),
+                todayHighlightColor: iconColor,
+              );
+            } else if (snapshot.hasError) {
+              return ErrorScreen(error: "${snapshot.error}");
+            }
+            return const Loader();
+          },
         ),
       ),
     );

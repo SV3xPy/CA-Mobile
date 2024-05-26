@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/features/schedule/controller/schedule_controller.dart';
@@ -5,7 +7,9 @@ import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/schedule_model.dart';
 import 'package:ca_mobile/models/subject_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -22,8 +26,12 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
     with WidgetsBindingObserver {
   final subjectController = TextEditingController();
   final classroomController = TextEditingController();
-  final fromController = TextEditingController();
-  final toController = TextEditingController();
+  final fromDayController = TextEditingController();
+  final fromHourController = TextEditingController();
+  final toHourController = TextEditingController();
+  final untilDateController = TextEditingController();
+  final untilDayController = TextEditingController();
+  final untilHourController = TextEditingController();
   final daysController = TextEditingController();
   String? _selectedSubject = "-----";
   String? _noDays = "-----";
@@ -33,6 +41,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
   String? recurrenceRule;
   late DateTime fromDate;
   late DateTime toDate;
+  late DateTime untilDate;
   final _formScheduleKey = GlobalKey<FormState>();
   final List<String> _daysWeek = [
     "Lunes",
@@ -63,6 +72,9 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
           hours: 2,
         ),
       );
+      untilDate = DateTime.now().add(
+        const Duration(days: 1),
+      );
     }
     WidgetsBinding.instance.addObserver(this);
   }
@@ -71,6 +83,27 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+  }
+
+  Future pickUntilDateTime({
+    required bool pickDate,
+    required bool theme,
+  }) async {
+    final date = await pickDateTime(
+      untilDate,
+      pickDate: pickDate,
+      theme: theme,
+      firstDate: fromDate,
+    );
+
+    if (date == null) return;
+
+    setState(() {
+      untilDate = date;
+    });
+
+    untilDayController.text = Utils.toDate(untilDate);
+    untilHourController.text = Utils.toTime(untilDate);
   }
 
   Future pickFromDateTime({
@@ -85,8 +118,10 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
 
     if (date == null) return;
 
-    if (date.isAfter(toDate)) {
-      toDate = DateTime(
+    final toDateAdjusted = date.add(Duration(hours: 2));
+
+    if (date.isAfter(untilDate)) {
+      untilDate = DateTime(
         date.year,
         date.month,
         date.day,
@@ -95,22 +130,49 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
       );
     }
 
-    setState(() {
-      fromDate = date;
-    });
+    if (pickDate) {
+      setState(() {
+        fromDate = date;
+        toDate =
+            toDateAdjusted; // Establecer toDate igual a fromDate para fechas seleccionadas
+      });
+    } else {
+      // Mantener la fecha y actualizar solo la hora en fromDate
+      setState(() {
+        fromDate = date;
+      });
+    }
+
+    fromHourController.text = Utils.toTime(fromDate);
   }
 
   Future pickToDateTime({required bool pickDate, required bool theme}) async {
-    final date = await pickDateTime(toDate,
-        pickDate: pickDate,
-        firstDate: pickDate ? fromDate : null,
-        theme: theme);
+    final date = await pickDateTime(
+      toDate,
+      pickDate: pickDate,
+      firstDate: pickDate ? fromDate : null,
+      theme: theme,
+    );
 
     if (date == null) return;
 
-    setState(() {
-      toDate = date;
-    });
+    if (!pickDate) {
+      setState(() {
+        toDate = DateTime(
+          toDate.year,
+          toDate.month,
+          toDate.day,
+          date.hour,
+          date.minute,
+        );
+      });
+    } else {
+      setState(() {
+        toDate = date;
+      });
+    }
+
+    toHourController.text = Utils.toTime(toDate);
   }
 
   Future<DateTime?> pickDateTime(
@@ -243,12 +305,19 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
   void storeScheduleData() async {
     fromDate;
     toDate;
+    recurrenceRule;
     String subject = subjectController.text.trim();
     String classroom = classroomController.text.trim();
-    String recurrenceRule = daysController.text.trim();
+    //String recurrenceRule = daysController.text.trim();
     if (subject.isNotEmpty) {
       ref.read(scheduleControllerProvider).saveScheduleDataToFirebase(
-          context, subject,fromDate,toDate,classroom,recurrenceRule);
+            context,
+            subject,
+            fromDate,
+            toDate,
+            classroom,
+            recurrenceRule!,
+          );
     }
   }
 
@@ -260,6 +329,11 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final datetimeBorder =
         tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
+    fromDayController.text = Utils.toDate(fromDate);
+    fromHourController.text = Utils.toTime(fromDate);
+    toHourController.text = Utils.toTime(toDate);
+    untilDayController.text = Utils.toDate(untilDate);
+    untilHourController.text = Utils.toTime(untilDate);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -399,71 +473,174 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                         Row(
                           children: [
                             Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: datetimeBorder,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
+                              child: TextFormField(
+                                style: TextStyle(
+                                  color: txtColor,
                                 ),
-                                child: ListTile(
-                                  title: Text(
-                                    Utils.toDate(fromDate),
+                                controller: fromDayController,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "Día de Inicio",
                                     style: TextStyle(
                                       color: txtColor,
                                     ),
                                   ),
-                                  leading: Icon(
+                                  hintText: Utils.toDate(fromDate),
+                                  hintStyle: TextStyle(
+                                    color: txtColor,
+                                  ),
+                                  prefixIcon: Icon(
                                     Icons.calendar_month,
                                     color: iconColor,
                                   ),
-                                  onTap: () {
-                                    pickFromDateTime(
-                                        pickDate: true, theme: tSwitchProvider);
-                                  },
                                 ),
+                                onTap: () {
+                                  pickFromDateTime(
+                                    pickDate: true,
+                                    theme: tSwitchProvider,
+                                  );
+                                },
                               ),
                             ),
-                            const SizedBox(
-                              width: 12,
-                            ),
+                            const SizedBox(width: 10),
                             Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: datetimeBorder,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    Utils.toTime(fromDate),
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    controller: fromHourController,
                                     style: TextStyle(
                                       color: txtColor,
                                     ),
+                                    readOnly: true,
+                                    decoration: InputDecoration(
+                                      label: Text(
+                                        "Hora Inicio",
+                                        style: TextStyle(
+                                          color: txtColor,
+                                        ),
+                                      ),
+                                      hintText: Utils.toTime(fromDate),
+                                      hintStyle: TextStyle(
+                                        color: txtColor,
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.access_time,
+                                        color: iconColor,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      pickFromDateTime(
+                                        pickDate: false,
+                                        theme: tSwitchProvider,
+                                      );
+                                    },
                                   ),
-                                  leading: Icon(
-                                    Icons.timer_outlined,
-                                    color: iconColor,
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                  onTap: () {
-                                    pickFromDateTime(
-                                      pickDate: false,
-                                      theme: tSwitchProvider,
-                                    );
-                                  },
-                                ),
+                                  TextFormField(
+                                    controller: toHourController,
+                                    style: TextStyle(
+                                      color: txtColor,
+                                    ),
+                                    readOnly: true,
+                                    decoration: InputDecoration(
+                                      label: Text(
+                                        "Hora Fin",
+                                        style: TextStyle(
+                                          color: txtColor,
+                                        ),
+                                      ),
+                                      hintText: Utils.toTime(toDate),
+                                      hintStyle: TextStyle(
+                                        color: txtColor,
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.access_time,
+                                        color: iconColor,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      pickToDateTime(
+                                        pickDate: false,
+                                        theme: tSwitchProvider,
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ],
-                        ),
+                        )
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       flex: 1,
+                        //       child: Container(
+                        //         decoration: BoxDecoration(
+                        //           border: Border.all(
+                        //             color: datetimeBorder,
+                        //             width: 1,
+                        //           ),
+                        //           borderRadius: BorderRadius.circular(
+                        //             10,
+                        //           ),
+                        //         ),
+                        //         child: ListTile(
+                        //           title: Text(
+                        //             Utils.toDate(fromDate),
+                        //             style: TextStyle(
+                        //               color: txtColor,
+                        //             ),
+                        //           ),
+                        //           leading: Icon(
+                        //             Icons.calendar_month,
+                        //             color: iconColor,
+                        //           ),
+                        //           onTap: () {
+                        //             pickFromDateTime(
+                        //                 pickDate: true, theme: tSwitchProvider);
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 12,
+                        //     ),
+                        //     Expanded(
+                        //       child: Container(
+                        //         decoration: BoxDecoration(
+                        //           border: Border.all(
+                        //             color: datetimeBorder,
+                        //             width: 1,
+                        //           ),
+                        //           borderRadius: BorderRadius.circular(
+                        //             10,
+                        //           ),
+                        //         ),
+                        //         child: ListTile(
+                        //           title: Text(
+                        //             Utils.toTime(fromDate),
+                        //             style: TextStyle(
+                        //               color: txtColor,
+                        //             ),
+                        //           ),
+                        //           leading: Icon(
+                        //             Icons.timer_outlined,
+                        //             color: iconColor,
+                        //           ),
+                        //           onTap: () {
+                        //             pickFromDateTime(
+                        //               pickDate: false,
+                        //               theme: tSwitchProvider,
+                        //             );
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                     const SizedBox(
@@ -484,75 +661,152 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                           height: 7,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: datetimeBorder,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
+                              child: TextFormField(
+                                controller: untilDayController,
+                                style: TextStyle(
+                                  color: txtColor,
                                 ),
-                                child: ListTile(
-                                  title: Text(
-                                    Utils.toDate(toDate),
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "Día Final",
                                     style: TextStyle(
                                       color: txtColor,
                                     ),
                                   ),
-                                  leading: Icon(
+                                  hintText: Utils.toDate(untilDate),
+                                  hintStyle: TextStyle(
+                                    color: txtColor,
+                                  ),
+                                  prefixIcon: Icon(
                                     Icons.calendar_month,
                                     color: iconColor,
                                   ),
-                                  onTap: () {
-                                    pickToDateTime(
-                                      pickDate: true,
-                                      theme: tSwitchProvider,
-                                    );
-                                  },
                                 ),
+                                onTap: () {
+                                  pickUntilDateTime(
+                                    pickDate: true,
+                                    theme: tSwitchProvider,
+                                  );
+                                },
                               ),
                             ),
                             const SizedBox(
-                              width: 12,
+                              width: 10,
                             ),
                             Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: datetimeBorder,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
+                              child: TextFormField(
+                                controller: untilHourController,
+                                style: TextStyle(
+                                  color: txtColor,
                                 ),
-                                child: ListTile(
-                                  title: Text(
-                                    Utils.toTime(toDate),
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "Hora Fin",
                                     style: TextStyle(
                                       color: txtColor,
                                     ),
                                   ),
-                                  leading: Icon(
-                                    Icons.timer_outlined,
+                                  hintText: Utils.toTime(untilDate),
+                                  hintStyle: TextStyle(
+                                    color: txtColor,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.access_time,
                                     color: iconColor,
                                   ),
-                                  onTap: () {
-                                    pickToDateTime(
-                                        pickDate: false,
-                                        theme: tSwitchProvider);
-                                  },
                                 ),
+                                validator: FormBuilderValidators.compose(
+                                  [
+                                    FormBuilderValidators.required(
+                                      errorText:
+                                          "Por favor, ingresa un título.",
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  pickUntilDateTime(
+                                    pickDate: false,
+                                    theme: tSwitchProvider,
+                                  );
+                                },
                               ),
                             ),
                           ],
                         ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     Expanded(
+                        //       flex: 1,
+                        //       child: Container(
+                        //         decoration: BoxDecoration(
+                        //           border: Border.all(
+                        //             color: datetimeBorder,
+                        //             width: 1,
+                        //           ),
+                        //           borderRadius: BorderRadius.circular(
+                        //             10,
+                        //           ),
+                        //         ),
+                        //         child: ListTile(
+                        //           title: Text(
+                        //             Utils.toDate(toDate),
+                        //             style: TextStyle(
+                        //               color: txtColor,
+                        //             ),
+                        //           ),
+                        //           leading: Icon(
+                        //             Icons.calendar_month,
+                        //             color: iconColor,
+                        //           ),
+                        //           onTap: () {
+                        //             pickToDateTime(
+                        //               pickDate: true,
+                        //               theme: tSwitchProvider,
+                        //             );
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 12,
+                        //     ),
+                        //     Expanded(
+                        //       child: Container(
+                        //         decoration: BoxDecoration(
+                        //           border: Border.all(
+                        //             color: datetimeBorder,
+                        //             width: 1,
+                        //           ),
+                        //           borderRadius: BorderRadius.circular(
+                        //             10,
+                        //           ),
+                        //         ),
+                        //         child: ListTile(
+                        //           title: Text(
+                        //             Utils.toTime(toDate),
+                        //             style: TextStyle(
+                        //               color: txtColor,
+                        //             ),
+                        //           ),
+                        //           leading: Icon(
+                        //             Icons.timer_outlined,
+                        //             color: iconColor,
+                        //           ),
+                        //           onTap: () {
+                        //             pickToDateTime(
+                        //                 pickDate: false,
+                        //                 theme: tSwitchProvider);
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         const SizedBox(
                           height: 25.0,
                         ),
@@ -589,15 +843,18 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                                   .map((day) => _daysMap[day]!)
                                   .toList();
                               byDay = abbreviatedDays.join(',');
-                              until = Utils.formatDateToISO(toDate);
+                              until = Utils.formatDateToISO(untilDate);
                               recurrenceRule =
-                                  "FREQ=WEEKLY;INTERVAL=1;BYDAY=$byDay;UNTIL=$until";
-                              print(abbreviatedDays);
-                              print(byDay);
-                              print(toDate);
-                              print(until);
+                                  "FREQ=WEEKLY;BYDAY=$byDay;INTERVAL=1;UNTIL=$until";
+                              // print(abbreviatedDays);
+                              // print(byDay);
+                              // print(toDate);
+                              // print(until);
                               print(recurrenceRule);
-                              storeScheduleData();
+                              print(fromDate);
+                              print(toDate);
+                              print(untilDate);
+                              //storeScheduleData();
                             },
                             child: const Text(
                               "Guardar",
