@@ -127,7 +127,8 @@ class EventRepository {
           type: type,
           subject: subject,
           color: color,
-          isDone: false);
+          isDone: false,
+          id: eventId);
       await firestore
           .collection('users')
           .doc(uid)
@@ -137,7 +138,9 @@ class EventRepository {
           .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const BottomNavigation(initialTabIndex: 1,),
+                builder: (context) => const BottomNavigation(
+                  initialTabIndex: 1,
+                ),
               ),
               (route) => false));
     } catch (e) {

@@ -59,8 +59,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const AddEventScreen(),
       );
     case AddSubjectScreen.routeName:
+    final subjectId =settings.arguments as String?;
       return MaterialPageRoute(
-        builder: (context) => const AddSubjectScreen(),
+        builder: (context) => AddSubjectScreen(
+          subjectId: subjectId,
+        ),
       );
     case EventDetailsScreen.routeName:
       final event = settings.arguments as EventModel;
