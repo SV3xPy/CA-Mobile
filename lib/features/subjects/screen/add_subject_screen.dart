@@ -1,5 +1,6 @@
 import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
+import 'package:ca_mobile/models/subject_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +8,8 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 class AddSubjectScreen extends ConsumerStatefulWidget {
   static const routeName = '/add_subject';
-  const AddSubjectScreen({super.key});
+  final String? subjectId;
+  const AddSubjectScreen({super.key, this.subjectId});
 
   @override
   ConsumerState<AddSubjectScreen> createState() => _AddSubjectScreenState();
@@ -20,10 +22,15 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
   final colorController = TextEditingController();
   final _formSubjectKey = GlobalKey<FormState>();
   Color color = Colors.red;
+  SubjectModel?
+      subjectData; // Variable de estado para almacenar los datos de la materia
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    loadSubjectData();
+    
   }
 
   @override
@@ -33,6 +40,22 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
     subjectNameController.dispose();
     profNameController.dispose();
     colorController.dispose();
+  }
+
+  Future<void> loadSubjectData() async {
+    if (widget.subjectId != null) {
+      try {
+        var data = await ref
+            .read(subjectControllerProvider)
+            .getSubjectData(widget.subjectId!);
+        setState(() {
+          subjectData = data;
+          color = data?.color?? Colors.black;
+        });
+      } catch (e) {
+        print('Error loading subject data: $e');
+      }
+    }
   }
 
   Widget buildColorPicker() {
@@ -51,9 +74,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            "Selecciona un color",
-          ),
+          title: const Text("Selecciona un color"),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -63,9 +84,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    "Seleccionar",
-                  ),
+                  child: const Text("Seleccionar"),
                 ),
               ],
             ),
@@ -74,11 +93,24 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
       },
     );
   }
-  void storeSubjectData() async{
+
+  void storeSubjectData() async {
     String subject = subjectNameController.text.trim();
     String teacherName = profNameController.text.trim();
-    if(subject.isNotEmpty){
-      ref.read(subjectControllerProvider).saveSubjectDataToFirebase(context,subject,teacherName,color);
+    if (subject.isNotEmpty) {
+      ref
+          .read(subjectControllerProvider)
+          .saveSubjectDataToFirebase(context, subject, teacherName, color);
+    }
+  }
+
+  void updateSubjectData() async {
+    String subject = subjectNameController.text.trim();
+    String teacherName = profNameController.text.trim();
+    String id = widget.subjectId!;
+    if (subject.isNotEmpty) {
+      ref.read(subjectControllerProvider).updateSubjectDataToFirebase(
+          context, subject, teacherName, color, id);
     }
   }
 
@@ -90,10 +122,14 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final datetimeBorder =
         tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
+    if (widget.subjectId != null) {
+      subjectNameController.text = subjectData?.subject ?? '';
+      profNameController.text = subjectData?.teacherName ?? '';
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Nueva materia",
+        title: Text(
+          widget.subjectId == null ? "Nueva materia" : 'Actualizar materia',
         ),
       ),
       body: SingleChildScrollView(
@@ -111,119 +147,128 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      controller: subjectNameController,
-                      keyboardType: TextInputType.name,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      style: TextStyle(
-                        color: txtColor,
-                      ),
-                      validator: FormBuilderValidators.compose(
-                        [
-                          FormBuilderValidators.required(
-                            errorText: "Por favor, ingresa un nombre.",
-                          ),
-                        ],
-                      ),
-                      decoration: InputDecoration(
-                        label: Text(
-                          "Nombre materia",
-                          style: TextStyle(
-                            color: txtColor,
-                          ),
-                        ),
-                        hintText: "Nombre de la materia",
-                        hintStyle: TextStyle(
-                          color: txtColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25.0,
-                    ),
-                    TextFormField(
-                      controller: profNameController,
-                      keyboardType: TextInputType.name,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      style: TextStyle(
-                        color: txtColor,
-                      ),
-                      validator: FormBuilderValidators.compose(
-                        [
-                          FormBuilderValidators.required(
-                            errorText: "Por favor, ingresa un nombre.",
-                          ),
-                        ],
-                      ),
-                      decoration: InputDecoration(
-                        label: Text(
-                          "Nombre profesor",
-                          style: TextStyle(
-                            color: txtColor,
-                          ),
-                        ),
-                        hintText: "Nombre del profesor",
-                        hintStyle: TextStyle(
-                          color: txtColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25.0,
-                    ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "Color",
+                        TextFormField(
+                          controller: subjectNameController,
+                          keyboardType: TextInputType.name,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           style: TextStyle(
                             color: txtColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
+                          ),
+                          validator: FormBuilderValidators.compose(
+                            [
+                              FormBuilderValidators.required(
+                                errorText: "Por favor, ingresa un nombre.",
+                              ),
+                            ],
+                          ),
+                          decoration: InputDecoration(
+                            label: Text(
+                              "Nombre materia",
+                              style: TextStyle(
+                                color: txtColor,
+                              ),
+                            ),
+                            hintText: "Nombre de la materia",
+                            hintStyle: TextStyle(
+                              color: txtColor,
+                            ),
+                          ),
+                        ), // Cierra el callback del builder
+                        const SizedBox(
+                          height: 25.0,
+                        ),
+                        TextFormField(
+                          controller: profNameController,
+                          keyboardType: TextInputType.name,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          style: TextStyle(
+                            color: txtColor,
+                          ),
+                          validator: FormBuilderValidators.compose(
+                            [
+                              FormBuilderValidators.required(
+                                errorText: "Por favor, ingresa un nombre.",
+                              ),
+                            ],
+                          ),
+                          decoration: InputDecoration(
+                            label: Text(
+                              "Nombre profesor",
+                              style: TextStyle(
+                                color: txtColor,
+                              ),
+                            ),
+                            hintText: "Nombre del profesor",
+                            hintStyle: TextStyle(
+                              color: txtColor,
+                            ),
                           ),
                         ),
                         const SizedBox(
-                          height: 7,
+                          height: 25.0,
                         ),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: color,
+                            Text(
+                              "Color",
+                              style: TextStyle(
+                                color: txtColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
                               ),
-                              width: 60,
-                              height: 60,
                             ),
                             const SizedBox(
-                              width: 10,
+                              height: 7,
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                pickColors(context);
-                              },
-                              child: const Text(
-                                "Selecciona un color",
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: color,
+                                  ),
+                                  width: 60,
+                                  height: 60,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    pickColors(context);
+                                  },
+                                  child: const Text(
+                                    "Selecciona un color",
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 25.0,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          storeSubjectData();
-                          //Navigator.of(context).pop();
-                        },
-                        child: const Text(
-                          "Guardar",
+                        const SizedBox(
+                          height: 25.0,
                         ),
-                      ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (widget.subjectId != null) {
+                                updateSubjectData();
+                              } else {
+                                storeSubjectData();
+                              }
+                              //Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              "Guardar",
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

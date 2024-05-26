@@ -45,6 +45,27 @@ class SubjectRepository {
     return subjects;
   }
 
+  Stream<List<SubjectModel>> getAllSubjectsDataStream() {
+    // Obtén el UID del usuario actual
+    String? uid = auth.currentUser?.uid;
+
+    // Retorna un Stream que emite una lista de SubjectModel cada vez que la colección cambia
+    return firestore
+        .collection('users')
+        .doc(uid!)
+        .collection('subjects')
+        .snapshots()
+        .map((querySnapshot) {
+      // Mapea cada documento de la respuesta a un SubjectModel
+      return querySnapshot.docs.map((doc) {
+        // Asegúrate de que los datos del documento sean un Map<String, dynamic>
+        Map<String, dynamic> data = doc.data();
+        // Crea un SubjectModel a partir de los datos del documento
+        return SubjectModel.fromMap(data);
+      }).toList();
+    });
+  }
+
   Future<SubjectModel?> getSubjectData(String subjectId) async {
     //Falta ponerle algo al doc para que traiga los datos de un evento en especifico
     var subjectData = await firestore
@@ -81,7 +102,10 @@ class SubjectRepository {
       String uid = auth.currentUser!.uid;
       var subjectId = const Uuid().v1();
       var subjectm = SubjectModel(
-          teacherName: teacherName, subject: subject, color: color);
+          teacherName: teacherName,
+          subject: subject,
+          color: color,
+          id: subjectId);
       await firestore
           .collection('users')
           .doc(uid)
@@ -91,12 +115,48 @@ class SubjectRepository {
           .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const BottomNavigation(initialTabIndex: 2,),
+                builder: (context) => const BottomNavigation(
+                  initialTabIndex: 2,
+                ),
               ),
               (route) => false));
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context: context, content: e.toString());
+      }
+    }
+  }
+
+  void updateSubjectData({
+    required String subject,
+    required String teacherName,
+    required Color color,
+    required ProviderRef ref,
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      var subjectm = SubjectModel(
+          color: color, subject: subject, teacherName: teacherName, id: id);
+      await firestore
+          .collection('users')
+          .doc(uid)
+          .collection('subjects')
+          .doc(id)
+          .update(subjectm.toMap())
+          .then((value) => Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavigation(
+                  initialTabIndex: 2,
+                ),
+              ),
+              (route) => false));
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(
+            context: context, content: e.toString()); // Manejo de errores
       }
     }
   }

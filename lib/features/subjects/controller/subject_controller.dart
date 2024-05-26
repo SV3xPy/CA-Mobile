@@ -26,6 +26,10 @@ class SubjectController {
     return subjects;
   }
 
+  Stream<List<SubjectModel>> getAllSubjectDataStream() {
+    return subjectRepository.getAllSubjectsDataStream();
+  }
+
   Future<void> deleteSubject(String subjectId) async {
     await subjectRepository.deleteSubject(subjectId);
   }
@@ -38,5 +42,17 @@ class SubjectController {
         color: color,
         ref: ref,
         context: context);
+  }
+
+  void updateSubjectDataToFirebase(BuildContext context, String subject,
+      String teacherName, Color color, String id) {
+    subjectRepository.updateSubjectData(
+      subject: subject,
+      teacherName: teacherName,
+      color: color,
+      ref: ref,
+      context: context,
+      id: id,
+    );
   }
 }

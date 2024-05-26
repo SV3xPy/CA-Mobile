@@ -3,6 +3,7 @@ import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/subject_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +21,7 @@ class SubjectsList extends ConsumerStatefulWidget {
 
 class _SubjectsListState extends ConsumerState<SubjectsList>
     with WidgetsBindingObserver {
+  String selectedId = "";
   @override
   void initState() {
     super.initState();
@@ -58,14 +60,15 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
     );
   }
 
-  _onMenuItemSelected(int popupMenuItemIndex) {
+  _onMenuItemSelected(int popupMenuItemIndex, String subjectId) {
     if (popupMenuItemIndex == Options.update.index) {
       Navigator.pushNamed(
         context,
         AddSubjectScreen.routeName,
+        arguments: subjectId,
       );
     } else {
-      //Llamar al método para borrar materias
+      ref.read(subjectControllerProvider).deleteSubject(subjectId);
     }
   }
 
@@ -77,11 +80,13 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final bgContainer =
         tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
-    return FutureBuilder(
-      future: ref.read(subjectControllerProvider).getAllSubjectData(),
-      builder: (context, snapshot) {
+    return StreamBuilder<List<SubjectModel>>(
+      stream: ref.read(subjectControllerProvider).getAllSubjectDataStream(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<SubjectModel>> snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
+            padding: const EdgeInsets.only(bottom: 120),
             shrinkWrap: true,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
@@ -168,13 +173,12 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                           ),
                           Positioned(
                             right: 0.0,
-                            bottom: 35,
+                            bottom: 20,
                             left: 280,
                             child: PopupMenuButton(
                               onSelected: (value) {
-                                _onMenuItemSelected(value);
-                                print(
-                                    "Esto es un color: ${subject[index].color}");
+                                _onMenuItemSelected(value, subject[index].id);
+                                selectedId = subject[index].id;
                               },
                               itemBuilder: (context) => [
                                 _buildPopupMenuItem(

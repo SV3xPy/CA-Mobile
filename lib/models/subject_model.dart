@@ -4,11 +4,13 @@ class SubjectModel {
   final String subject;
   final String teacherName;
   final Color color;
+  final String id;
 
   SubjectModel({
     required this.color,
     required this.subject,
     required this.teacherName,
+    required this.id
   });
 
   Map<String, dynamic> toMap() {
@@ -16,6 +18,7 @@ class SubjectModel {
       'subject': subject,
       'teacherName': teacherName,
       'color': color.value.toRadixString(16).padLeft(8, '0'),
+      'id':id,
     };
   }
 
@@ -32,6 +35,7 @@ class SubjectModel {
       subject: map['subject'] ?? '',
       teacherName: map['teacherName'] ?? '',
       color: color,
+      id:map['id'] ?? '',
     );
   }
 }
