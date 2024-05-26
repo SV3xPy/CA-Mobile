@@ -1,5 +1,6 @@
 import 'package:ca_mobile/colors.dart';
 import 'package:ca_mobile/common/utils/utils.dart';
+import 'package:ca_mobile/features/schedule/controller/schedule_controller.dart';
 import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/schedule_model.dart';
@@ -237,6 +238,18 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
         );
       },
     );
+  }
+
+  void storeScheduleData() async {
+    fromDate;
+    toDate;
+    String subject = subjectController.text.trim();
+    String classroom = classroomController.text.trim();
+    String recurrenceRule = daysController.text.trim();
+    if (subject.isNotEmpty) {
+      ref.read(scheduleControllerProvider).saveScheduleDataToFirebase(
+          context, subject,fromDate,toDate,classroom,recurrenceRule);
+    }
   }
 
   @override
@@ -584,6 +597,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                               print(toDate);
                               print(until);
                               print(recurrenceRule);
+                              storeScheduleData();
                             },
                             child: const Text(
                               "Guardar",
