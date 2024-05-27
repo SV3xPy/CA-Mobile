@@ -31,6 +31,12 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  Map<String, ScheduleModel> mapSchedulesById(
+    List<ScheduleModel> schedulesList,
+  ) {
+    return {for (var schedule in schedulesList) schedule.id: schedule};
+  }
+
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
@@ -76,6 +82,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                 appointmentBuilder: (context, calendarAppointmentDetails) {
                   final schedule =
                       calendarAppointmentDetails.appointments.first;
+                  print("$schedule");
 
                   return Container(
                     width: calendarAppointmentDetails.bounds.width,
@@ -127,7 +134,24 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                 ),
                 todayHighlightColor: iconColor,
                 onTap: (calendarTapDetails) {
-                  print("${calendarTapDetails.appointments!.first}");
+                  if (calendarTapDetails.appointments == null) return;
+                  final schedule = calendarTapDetails.appointments!.first;
+                  Map<String, ScheduleModel> schedulesMap =
+                      mapSchedulesById(schedulesList);
+                  ScheduleModel? scheduleModel = schedulesMap['${schedule.id}'];
+                  // if (schedule != null) {
+                  //   // El schedule con el ID especificado fue encontrado
+                  //   print(scheduleModel!.subject);
+                  // } else {
+                  //   // El schedule con el ID especificado no fue encontrado
+                  //   print('Schedule not found');
+                  // }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ScheduleDetailsScreen(schedule: scheduleModel!),
+                    ),
+                  );
                 },
               );
             } else if (snapshot.hasError) {

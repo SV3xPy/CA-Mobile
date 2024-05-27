@@ -18,10 +18,8 @@ class ScheduleDataSource extends CalendarDataSource {
   String getSubject(int index) => getSchedule(index).subject;
 
   @override
-  bool isAllDay(int index) {
-    return false;
-  }
+  String getRecurrenceRule(int index) => getSchedule(index).recurrenceRule;
 
   @override
-  String getRecurrenceRule(int index) => getSchedule(index).recurrenceRule;
+  String getId(int index) => getSchedule(index).id;
 }

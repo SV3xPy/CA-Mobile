@@ -67,7 +67,7 @@ class _TasksWidgetState extends ConsumerState<TasksWidget>
             ),
             appointmentBuilder: (context, calendarAppointmentDetails) {
               final event = calendarAppointmentDetails.appointments.first;
-              print("njnjn$event");
+
               return Container(
                 width: calendarAppointmentDetails.bounds.width,
                 height: calendarAppointmentDetails.bounds.height,
@@ -91,7 +91,7 @@ class _TasksWidgetState extends ConsumerState<TasksWidget>
             onTap: (calendarTapDetails) {
               if (calendarTapDetails.appointments == null) return;
               final event = calendarTapDetails.appointments!.first;
-              print("hola: $event");
+
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => EventDetailsScreen(event: event),
