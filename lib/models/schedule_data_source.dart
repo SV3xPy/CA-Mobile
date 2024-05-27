@@ -2,9 +2,8 @@ import 'package:ca_mobile/models/schedule_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class ScheduleDataSource extends CalendarDataSource {
-  ScheduleDataSource(List<ScheduleModel> appointments) {
-    this.appointments = appointments;
-    print("$appointments");
+  ScheduleDataSource(List<ScheduleModel> schedule) {
+    appointments = schedule;
   }
 
   ScheduleModel getSchedule(int index) => appointments![index] as ScheduleModel;

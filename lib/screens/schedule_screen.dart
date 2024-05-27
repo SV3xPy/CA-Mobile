@@ -2,6 +2,7 @@ import 'package:ca_mobile/common/widgets/error.dart';
 import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/schedule/controller/schedule_controller.dart';
 import 'package:ca_mobile/features/schedule/screen/add_schedule_screen.dart';
+import 'package:ca_mobile/features/schedule/screen/schedule_details.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/schedule_data_source.dart';
 import 'package:ca_mobile/models/schedule_model.dart';
@@ -38,6 +39,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final datetimeBorder =
         tSwitchProvider ? const Color(0xFF12171D) : const Color(0xffede8e2);
+
+    final scheduleProvider = ref.read(scheduleControllerProvider);
+    final schedules = scheduleProvider.getAllScheduleData();
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
@@ -60,21 +64,19 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
         padding: const EdgeInsets.only(
           bottom: 70,
         ),
-        child: FutureBuilder(
-          future: ref.read(scheduleControllerProvider).getAllScheduleData(),
+        child: FutureBuilder<List<ScheduleModel>>(
+          future: schedules,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<ScheduleModel> schedules = snapshot.data!;
-              for (var schedule in schedules) {
-                print(
-                    'Schedule: ${schedule.subject}, Start: ${schedule.from}, End: ${schedule.to}');
-              }
+              List<ScheduleModel> schedulesList = snapshot.data!;
+
               return SfCalendar(
                 view: CalendarView.week,
-                dataSource: ScheduleDataSource(schedules),
+                dataSource: ScheduleDataSource(schedulesList),
                 appointmentBuilder: (context, calendarAppointmentDetails) {
                   final schedule =
                       calendarAppointmentDetails.appointments.first;
+
                   return Container(
                     width: calendarAppointmentDetails.bounds.width,
                     height: calendarAppointmentDetails.bounds.height,
@@ -124,6 +126,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                   endHour: 24,
                 ),
                 todayHighlightColor: iconColor,
+                onTap: (calendarTapDetails) {
+                  print("${calendarTapDetails.appointments!.first}");
+                },
               );
             } else if (snapshot.hasError) {
               return ErrorScreen(error: "${snapshot.error}");

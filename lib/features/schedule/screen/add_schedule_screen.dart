@@ -854,7 +854,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                               print(fromDate);
                               print(toDate);
                               print(untilDate);
-                              //storeScheduleData();
+                              storeScheduleData();
                             },
                             child: const Text(
                               "Guardar",
