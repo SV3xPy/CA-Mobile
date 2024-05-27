@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:ca_mobile/common/widgets/image_selector.dart';
 import 'package:ca_mobile/features/auth/screens/options_screen.dart';
@@ -11,9 +12,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   static const routeName = '/settings';
@@ -32,6 +35,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   DateTime? selectedDate;
   File? _image;
   final ImageService _imageService = ImageService();
+  String loginType = "";
   @override
   void initState() {
     super.initState();
@@ -65,22 +69,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     }
   }
 
+  void loginTypee() async {
+    final prefs = await SharedPreferences.getInstance();
+    loginType = prefs.getString('loginType') ?? 'default';
+    print(loginType);
+  }
+
   void storeUserData() async {
     String name = nameController.text.trim();
     FirebaseAuth.instance.currentUser!.updateDisplayName(name);
     String lastName = lastNameController.text.trim();
     String? birthDate = selectedDate != null
         ? DateFormat('yyyy-MM-dd').format(selectedDate!)
-        : null;
-
+        : birthDayController.text;
     if (name.isNotEmpty) {
-      ref.read(authControllerProvider).saveUserDataToFirebase(
-            context,
-            name,
-            _image,
-            lastName,
-            birthDate!,
-          );
+      if (_image == null) {
+        ref
+            .read(authControllerProvider)
+            .updateUserDataNOIMGToFirebase(context, name, lastName, birthDate);
+      } else {
+        ref.read(authControllerProvider).updateUserDataToFirebase(
+              context,
+              name,
+              _image!,
+              lastName,
+              birthDate,
+            );
+      }
     }
   }
 
@@ -88,6 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
       BuildContext context, Color? bg, Color txt, Color? logo) {
     final user = FirebaseAuth.instance.currentUser;
     final String? photoUrl = user?.photoURL;
+    loginTypee();
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -120,16 +136,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                         children: [
                           GestureDetector(
                             onTap: () {
-                              _imageService.showSelectPhotoOptions(context,
-                                  (source) async {
-                                File? selectedImage = await _imageService
-                                    .selectImage(context, source, (img) {
-                                  setState(() {
-                                    _image = img;
-                                    Navigator.of(context).pop();
+                              if (loginType == 'email') {
+                                _imageService.showSelectPhotoOptions(context,
+                                    (source) async {
+                                  File? selectedImage = await _imageService
+                                      .selectImage(context, source, (img) {
+                                    setState(() {
+                                      _image = img;
+                                      Navigator.of(context).pop();
+                                    });
                                   });
                                 });
-                              });
+                              } else {
+                                showSnackBar(
+                                    context: context,
+                                    content:
+                                        "Opción solo disponible con email");
+                              }
                             },
                             child: CircleAvatar(
                               radius: 64.0,
@@ -153,17 +176,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                             left: 80,
                             child: IconButton(
                               onPressed: () {
-                                _imageService.showSelectPhotoOptions(context,
-                                    (source) async {
-                                  File? selectedImage = await _imageService
-                                      .selectImage(context, source, (img) {
-                                    setState(() {
-                                      _image = img;
-                                      print(_image);
-                                      Navigator.of(context).pop();
+                                if (loginType == 'email') {
+                                  _imageService.showSelectPhotoOptions(context,
+                                      (source) async {
+                                    File? selectedImage = await _imageService
+                                        .selectImage(context, source, (img) {
+                                      setState(() {
+                                        _image = img;
+                                        //print(_image);
+                                        Navigator.of(context).pop();
+                                      });
                                     });
                                   });
-                                });
+                                } else {
+                                  showSnackBar(
+                                      context: context,
+                                      content:
+                                          "Opción solo disponible con email");
+                                }
                               },
                               icon: const Icon(Icons.add_a_photo),
                             ),
@@ -235,7 +265,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                             "Por favor, ingresa tu apellido."),
                                   ],
                                 ),
-                                decoration:  InputDecoration(
+                                decoration: InputDecoration(
                                   label: Text(
                                     "Apellido",
                                     style: TextStyle(

@@ -83,6 +83,24 @@ class AuthController {
         ref: ref,
         context: context);
   }
+  void updateUserDataNOIMGToFirebase(BuildContext context, String name, String lastName, String birthDay){
+        authRepository.updateUserNoIMGData(
+        name: name,
+        lastName: lastName,
+        birthDay: birthDay,
+        ref: ref,
+        context: context);
+  }
+  void updateUserDataToFirebase(BuildContext context, String name,
+      File? profilePic, String lastName, String birthDay) {
+    authRepository.updateUserData(
+        name: name,
+        profilePic: profilePic,
+        lastName: lastName,
+        birthDay: birthDay,
+        ref: ref,
+        context: context);
+  }
 
   Future<void> signOut() async {
     await authRepository.signOut();
