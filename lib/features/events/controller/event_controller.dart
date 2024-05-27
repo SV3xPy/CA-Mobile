@@ -37,9 +37,31 @@ class EventController {
     return eventsDate;
   }
 
-  Future<void> deleteEvent() async {
-    await eventRepository.deleteEvent();
+  Future<void> deleteEvent(String eventId) async {
+    await eventRepository.deleteEvent(eventId);
   }
+
+  void updateEventDataToFirebase(BuildContext context, String title,
+      DateTime from,
+      DateTime to,
+      String subject,
+      String description,
+      String type,
+      String color,
+      String id){
+        eventRepository.updateEventData(
+          context: context,
+          title: title,
+          from: from,
+          to: to,
+          subject: subject,
+          description: description,
+          type: type,
+          color: color,
+          id: id,
+          ref: ref,
+        );
+      }
 
   void saveEventDataToFirebase(
       BuildContext context,
