@@ -4,6 +4,7 @@ import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/features/theme/theme.dart';
+import 'package:ca_mobile/firebase_messaging.dart';
 import 'package:ca_mobile/router.dart';
 import 'package:ca_mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseCM().initNotifications();
   runApp(const ProviderScope(child: MyApp()));
 }
 

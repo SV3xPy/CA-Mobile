@@ -57,7 +57,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     _controller.jumpToPage(2);
                   },
                   child: const Text(
-                    'Skip',
+                    'Omitir',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
@@ -77,7 +77,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           navigateToOptionsScreen(context);
                         },
                         child: const Text(
-                          "Done",
+                          "Listo",
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
@@ -94,7 +94,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           );
                         },
                         child: const Text(
-                          "Next",
+                          "Siguiente",
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,

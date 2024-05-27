@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -10,9 +11,9 @@ import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +37,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   File? _image;
   final ImageService _imageService = ImageService();
   String loginType = "";
+  bool isPremium = false;
   @override
   void initState() {
     super.initState();
@@ -72,7 +74,104 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   void loginTypee() async {
     final prefs = await SharedPreferences.getInstance();
     loginType = prefs.getString('loginType') ?? 'default';
-    print(loginType);
+  }
+
+  void isPremiumm() async {
+    String id = FirebaseAuth.instance.currentUser!.uid;
+    isPremium = await ref.read(authControllerProvider).checkIsPremium(id);
+  }
+
+  void handleSwitchChange(bool value) async {
+    isPremiumm(); // Espera a que isPremiumm() complete
+    if (isPremium) {
+      ref.read(themeSwitchProvider.notifier).state = value;
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Funcionalidad Premium"),
+              content: const Text(
+                  "Esta es una función premium. ¿Quieres pagar con PayPal para habilitarla?"),
+              actions: <Widget>[
+                TextButton(
+                  style: const ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(tabColor),
+                  ),
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  style: const ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(tabColor),
+                  ),
+                  child: const Text('Pagar con Paypal'),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => PaypalCheckoutView(
+                          sandboxMode: true,
+                          clientId:
+                              "AYbw1mHYmniyio7oPTS_P1WOsusg63GFgciYkTb7a0_YJt-mUu-ZXOxZ-pH5cNIPx1MIqaO3dqHQeE0T",
+                          secretKey:
+                              "EDsCfII1HJpYs6H7by1XCL7cmyIswEMw8DmtVFg5LtviLUwteKqFBubHS8q-D2-TP6987ly0qBwMcxx0",
+                          transactions: const [
+                            {
+                              "amount": {
+                                "total": '25',
+                                "currency": "MXN",
+                                "details": {
+                                  "subtotal": '25',
+                                  "shipping": '0',
+                                  "shipping_discount": 0
+                                }
+                              },
+                              "description":
+                                  "The payment transaction description.",
+                              "payment_options": {
+                                "allowed_payment_method":
+                                    "INSTANT_FUNDING_SOURCE"
+                              },
+                              "item_list": {
+                                "items": [
+                                  {
+                                    "name": "Suscripción Premium",
+                                    "quantity": 1,
+                                    "price": '25',
+                                    "currency": "MXN"
+                                  },
+                                ],
+                              }
+                            }
+                          ],
+                          note: "Derechos reservados S.A de C.V",
+                          onSuccess: (Map params) async {
+                            log("onSuccess: $params");
+                            ref.read(authControllerProvider).setPremium();
+                            Navigator.pop(context);
+                          },
+                          onError: (error) {
+                            log("onError: $error");
+                            Navigator.pop(context);
+                          },
+                          onCancel: () {
+                            log('cancelled:');
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          });
+      print("El usuario no es premium");
+      // Opcionalmente, puedes revertir el cambio del switch
+      // ref.read(tSwitchProvider.notifier).state =!value;
+    }
   }
 
   void storeUserData() async {
@@ -468,9 +567,40 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 trailing: Switch(
                   value: tSwitchProvider,
                   onChanged: (value) {
-                    ref.read(themeSwitchProvider.notifier).state = value;
+                    handleSwitchChange(value);
                   },
                   activeColor: Colors.orangeAccent,
+                ),
+              ),
+              InkResponse(
+                containedInkWell: true,
+                highlightShape: BoxShape.rectangle,
+                highlightColor: Colors.transparent,
+                onTap: () {},
+                child: ListTile(
+                  leading: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 6.0,
+                    ),
+                    child: Icon(
+                      Icons.notifications,
+                      color: iconColor,
+                    ),
+                  ),
+                  title: Text(
+                    "Notificaciones",
+                    style: TextStyle(
+                      color: txtColor,
+                      fontSize: 17,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "Administra tus notifiaciones",
+                    style: TextStyle(
+                      color: txtColor,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
               ),
               InkResponse(
