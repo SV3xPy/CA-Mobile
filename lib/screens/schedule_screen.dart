@@ -82,8 +82,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                 appointmentBuilder: (context, calendarAppointmentDetails) {
                   final schedule =
                       calendarAppointmentDetails.appointments.first;
-                  print("$schedule");
-
                   return Container(
                     width: calendarAppointmentDetails.bounds.width,
                     height: calendarAppointmentDetails.bounds.height,

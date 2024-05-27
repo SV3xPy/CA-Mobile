@@ -3,10 +3,12 @@ import 'package:ca_mobile/models/schedule_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class ScheduleDetailsScreen extends ConsumerWidget {
   static const routeName = '/schedule-details';
   final ScheduleModel schedule;
+
   const ScheduleDetailsScreen({super.key, required this.schedule});
 
   @override
@@ -15,6 +17,21 @@ class ScheduleDetailsScreen extends ConsumerWidget {
     final iconColor =
         tSwitchProvider ? const Color(0xFF63CF93) : const Color(0xFF9c306c);
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
+    RecurrenceProperties recProp =
+        SfCalendar.parseRRule(schedule.recurrenceRule, schedule.from);
+
+    final Map<WeekDays, String> weekDayNames = {
+      WeekDays.monday: 'Lunes',
+      WeekDays.tuesday: 'Martes',
+      WeekDays.wednesday: 'Miércoles',
+      WeekDays.thursday: 'Jueves',
+      WeekDays.friday: 'Viernes',
+      WeekDays.saturday: 'Sábado',
+      WeekDays.sunday: 'Domingo',
+    };
+
+    List<String> dayNames =
+        recProp.weekDays.map((day) => weekDayNames[day]!).toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detalles"),
@@ -33,6 +50,17 @@ class ScheduleDetailsScreen extends ConsumerWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              color: txtColor,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            schedule.classroom,
+            style: TextStyle(
+              fontSize: 20,
+              fontStyle: FontStyle.italic,
               color: txtColor,
             ),
           ),
@@ -68,7 +96,10 @@ class ScheduleDetailsScreen extends ConsumerWidget {
               Text(
                 "Hasta",
                 style: TextStyle(
-                    color: txtColor, fontWeight: FontWeight.bold, fontSize: 15),
+                  color: txtColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
               ),
               Text(
                 DateFormat('EEE, MMM d, yyyy, HH:mm').format(schedule.to),
@@ -82,23 +113,27 @@ class ScheduleDetailsScreen extends ConsumerWidget {
           const SizedBox(
             height: 24,
           ),
-          // event.subject == ""
-          //     ? Container()
-          //     : Text(
-          //         event.subject,
-          //         style: TextStyle(
-          //           color: txtColor,
-          //         ),
-          //       ),
-          const SizedBox(
-            height: 24,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Repetición",
+                style: TextStyle(
+                  color: txtColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+              Text(
+                "$dayNames",
+                style: TextStyle(
+                  color: txtColor,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 15,
+                ),
+              ),
+            ],
           ),
-          // Text(
-          //   event.type,
-          //   style: TextStyle(
-          //     color: txtColor,
-          //   ),
-          // ),
           const SizedBox(
             height: 24,
           ),
