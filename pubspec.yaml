@@ -68,6 +68,9 @@ dependencies:
   flutter_svg: ^2.0.10+1
   flutter_colorpicker: ^1.1.0
   firebase_messaging: ^14.9.3
+  flutter_paypal_payment: ^1.0.0
+
+
   
 dev_dependencies:
   flutter_test:

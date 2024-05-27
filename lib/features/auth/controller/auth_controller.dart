@@ -83,14 +83,17 @@ class AuthController {
         ref: ref,
         context: context);
   }
-  void updateUserDataNOIMGToFirebase(BuildContext context, String name, String lastName, String birthDay){
-        authRepository.updateUserNoIMGData(
+
+  void updateUserDataNOIMGToFirebase(
+      BuildContext context, String name, String lastName, String birthDay) {
+    authRepository.updateUserNoIMGData(
         name: name,
         lastName: lastName,
         birthDay: birthDay,
         ref: ref,
         context: context);
   }
+
   void updateUserDataToFirebase(BuildContext context, String name,
       File? profilePic, String lastName, String birthDay) {
     authRepository.updateUserData(
@@ -104,6 +107,14 @@ class AuthController {
 
   Future<void> signOut() async {
     await authRepository.signOut();
+  }
+
+  Future<bool> checkIsPremium(String id) async {
+    return authRepository.checkIsPremium(id);
+  }
+
+  void setPremium() async {
+    authRepository.setPremium();
   }
 
   Stream<UserModel> userDataById(String userId) {
