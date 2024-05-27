@@ -168,7 +168,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               ],
             );
           });
-      print("El usuario no es premium");
       // Opcionalmente, puedes revertir el cambio del switch
       // ref.read(tSwitchProvider.notifier).state =!value;
     }
