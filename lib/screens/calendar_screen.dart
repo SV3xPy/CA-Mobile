@@ -103,8 +103,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
                 showNavigationArrow: true,
                 showTodayButton: true,
                 onLongPress: (calendarLongPressDetails) {
-                  print(
-                      "fecha seleccionada: ${calendarLongPressDetails.date!}");
                   eventCont.setDate(calendarLongPressDetails.date!);
                   showModalBottomSheet(
                     context: context,

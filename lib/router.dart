@@ -10,8 +10,10 @@ import 'package:ca_mobile/features/events/screen/add_event_screen.dart';
 import 'package:ca_mobile/features/events/screen/event_details.dart';
 import 'package:ca_mobile/features/onboarding/screens/onboarding_screen.dart';
 import 'package:ca_mobile/features/schedule/screen/add_schedule_screen.dart';
+import 'package:ca_mobile/features/schedule/screen/schedule_details.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
 import 'package:ca_mobile/models/event_model.dart';
+import 'package:ca_mobile/models/schedule_model.dart';
 import 'package:ca_mobile/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +62,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const AddEventScreen(),
       );
     case AddSubjectScreen.routeName:
-    final subjectId =settings.arguments as String?;
+      final subjectId = settings.arguments as String?;
       return MaterialPageRoute(
         builder: (context) => AddSubjectScreen(
           subjectId: subjectId,
@@ -75,6 +77,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => EventDetailsScreen(
           event: event,
+        ),
+      );
+    case ScheduleDetailsScreen.routeName:
+      final event = settings.arguments as ScheduleModel;
+      return MaterialPageRoute(
+        builder: (context) => ScheduleDetailsScreen(
+          schedule: event,
         ),
       );
     default:
