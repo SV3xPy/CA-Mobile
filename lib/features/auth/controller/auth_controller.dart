@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:ca_mobile/features/auth/repository/auth_repository.dart';
 import 'package:ca_mobile/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 import 'dart:convert';
@@ -35,10 +36,23 @@ class AuthController {
     return authRepository.signUpEmail(context, email, encodedPassword);
   }
 
+  Future<bool> signUpWithGoogle(BuildContext context) {
+    return authRepository.signUpGoogle(context);
+  }
+
+  Future<UserCredential> singUpWithFacebook(BuildContext context) {
+    return authRepository.signUpFacebook(context);
+  }
+
+  Future<bool> singUpWithGithub(BuildContext context) {
+    return authRepository.signUpGithub(context);
+  }
+
   Future<bool> signInWithEmail(
       BuildContext context, String email, String password) {
     String encodedPassword = _hashPassword(password);
-    return authRepository.signInUser(context, password: encodedPassword, email: email);
+    return authRepository.signInUser(context,
+        password: encodedPassword, email: email);
   }
 
   String _hashPassword(String password) {
@@ -51,13 +65,35 @@ class AuthController {
     return authRepository.isEmailVerified();
   }
 
-  Future<bool> deleteUser() {
-    return authRepository.deleteUserAccount();
+  Future<void> sendVerificationMail() async {
+    authRepository.sendVerificationMail();
+  }
+
+  Future<void> deleteUser() async {
+    await authRepository.deleteUserAccount();
   }
 
   void saveUserDataToFirebase(BuildContext context, String name,
       File? profilePic, String lastName, String birthDay) {
     authRepository.saveUserData(
+        name: name,
+        profilePic: profilePic,
+        lastName: lastName,
+        birthDay: birthDay,
+        ref: ref,
+        context: context);
+  }
+  void updateUserDataNOIMGToFirebase(BuildContext context, String name, String lastName, String birthDay){
+        authRepository.updateUserNoIMGData(
+        name: name,
+        lastName: lastName,
+        birthDay: birthDay,
+        ref: ref,
+        context: context);
+  }
+  void updateUserDataToFirebase(BuildContext context, String name,
+      File? profilePic, String lastName, String birthDay) {
+    authRepository.updateUserData(
         name: name,
         profilePic: profilePic,
         lastName: lastName,

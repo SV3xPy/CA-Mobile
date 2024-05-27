@@ -5,6 +5,7 @@ class UserModel {
   final String profilePic;
   final String email;
   final String birthDay;
+  final bool isPremium;
   final List<String> classIDs;
 
   UserModel({
@@ -14,6 +15,7 @@ class UserModel {
     required this.profilePic,
     required this.email,
     required this.birthDay,
+    required this.isPremium,
     required this.classIDs,
   });
   Map<String, dynamic> toMap() {
@@ -24,7 +26,17 @@ class UserModel {
       'profilePic': profilePic,
       'email': email,
       'birthDay': birthDay,
+      'isPremium': isPremium,
       'classIDs': classIDs,
+    };
+  }
+
+  Map<String, dynamic> toMapNoIMG() {
+    return {
+      'name': name,
+      'lastName': lastName,
+      'email': email,
+      'birthDay': birthDay,
     };
   }
 
@@ -36,6 +48,7 @@ class UserModel {
       profilePic: map['profilePic'] ?? '',
       email: map['email'] ?? '',
       birthDay: map['birthDay'] ?? '',
+      isPremium: map['isPremium'] ?? '',
       classIDs: List<String>.from(map['classIDs']),
     );
   }
