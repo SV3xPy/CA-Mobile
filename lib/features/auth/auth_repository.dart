@@ -94,19 +94,12 @@ class AuthRepository {
   }
 
   Future<UserCredential> signUpFacebook(BuildContext context) async {
-    try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.token);
-      final userCredential =
-          await auth.signInWithCredential(facebookAuthCredential);
-      return auth.signInWithCredential(facebookAuthCredential);
-    } on FirebaseAuthException catch (e) {
-      if (context.mounted) {
-        showSnackBar(context: context, content: e.message!);
-      }
-          rethrow;
-    }
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    final userCredential =
+        await auth.signInWithCredential(facebookAuthCredential);
+    return auth.signInWithCredential(facebookAuthCredential);
   }
 
   Future<bool> signUpGithub(BuildContext context) async {
@@ -119,6 +112,7 @@ class AuthRepository {
         }
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('loginType', 'github');
+
         return true;
       }
       return false;
@@ -211,67 +205,6 @@ class AuthRepository {
     required BuildContext context,
   }) async {
     String uid = auth.currentUser!.uid;
-    String photoURL =
-        'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
-    if (profilePic != null) {
-      photoURL = await ref
-          .read(commonFirebaseStorageRepositoryProvider)
-          .storeFileToFirebase(
-            'profilePic/$uid',
-            profilePic,
-          );
-    }
-    FirebaseAuth.instance.currentUser!.updatePhotoURL(photoURL);
-    FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-    FirebaseAuth.instance.userChanges();
-    var user = UserModel(
-        name: name,
-        lastName: lastName,
-        uid: uid,
-        birthDay: birthDay,
-        profilePic: photoURL,
-        email: auth.currentUser!.email!,
-        classIDs: [],
-        isPremium: false);
-    await firestore.collection('users').doc(uid).update(user.toMap()).then(
-          (value) => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const BottomNavigation(),
-            ),
-            (route) => false,
-          ),
-        );
-  }
-
-  void updateUserNoIMGData({
-    required String name,
-    required String lastName,
-    required String birthDay,
-    required ProviderRef ref,
-    required BuildContext context,
-  }) async {
-    String uid = auth.currentUser!.uid;
-    FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-    FirebaseAuth.instance.userChanges();
-    var user = UserModel(
-        name: name,
-        lastName: lastName,
-        uid: uid,
-        birthDay: birthDay,
-        profilePic: '',
-        email: auth.currentUser!.email!,
-        classIDs: [],
-        isPremium: false);
-    await firestore.collection('users').doc(uid).update(user.toMapNoIMG()).then(
-          (value) => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const BottomNavigation(),
-            ),
-            (route) => false,
-          ),
-        );
   }
 
   void saveUserData({
@@ -295,7 +228,6 @@ class AuthRepository {
             );
       }
       FirebaseAuth.instance.currentUser!.updatePhotoURL(photoURL);
-      FirebaseAuth.instance.currentUser!.updateDisplayName(name);
       var user = UserModel(
           name: name,
           lastName: lastName,
@@ -305,7 +237,7 @@ class AuthRepository {
           email: auth.currentUser!.email!,
           classIDs: [],
           isPremium: false);
-      FirebaseAuth.instance.userChanges();
+
       await firestore.collection('users').doc(uid).set(user.toMap()).then(
             (value) => Navigator.pushAndRemoveUntil(
               context,

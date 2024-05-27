@@ -31,6 +31,15 @@ class UserModel {
     };
   }
 
+  Map<String, dynamic> toMapNoIMG() {
+    return {
+      'name': name,
+      'lastName': lastName,
+      'email': email,
+      'birthDay': birthDay,
+    };
+  }
+
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       name: map['name'] ?? '',

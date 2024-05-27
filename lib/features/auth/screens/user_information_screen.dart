@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/common/widgets/image_selector.dart';
 import 'package:ca_mobile/features/auth/screens/select_photo_options_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserInfoScreen extends ConsumerStatefulWidget {
   final bool notEmailLogin;
@@ -61,17 +63,20 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   }
 
   Future<void> _loadProviderUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    String loginType = prefs.getString('loginType') ?? 'default';
+    print(loginType);
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       for (var info in user.providerData) {
         if (info.providerId == 'facebook.com') {
-          print('FEISSSSSSSSSSSSSSSSSSSS');
+          //print('FEISSSSSSSSSSSSSSSSSSSS');
           await _loadFacebookUserData();
         } else if (info.providerId == 'google.com') {
-          print('GOOOOOOGGGGLLEEEEE');
+          //print('GOOOOOOGGGGLLEEEEE');
           await _loadGoogleUserData();
         } else if (info.providerId == 'github.com') {
-          print('GIIIIIIHUUUUU');
+          //print('GIIIIIIHUUUUU');
           await _loadGithubUserData();
         }
       }
@@ -99,10 +104,16 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
 
   Future<void> _loadGithubUserData() async {
     final user = FirebaseAuth.instance.currentUser;
+    List<String>? nameParts = user?.displayName!.split(' ');
+
     setState(() {
-      nameController.text = user?.displayName ?? '';
+      nameController.text = nameParts![0];
+      if (nameParts.length > 1) {
+        lastNameController.text = nameParts.sublist(1).join(' ');
+      } else {
+        lastNameController.text = '';
+      }
       //pictureUrl = user?.photoURL;
-      print(pictureUrl);
       _loadUserImage();
     });
   }
@@ -113,7 +124,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
     setState(() {
       nameController.text = user?.displayName ?? '';
       //pictureUrl = user?.photoURL;
-      print(pictureUrl);
       _loadUserImage();
     });
   }
@@ -148,7 +158,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
         Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {
-      print(e);
       if (mounted) {
         Navigator.of(context).pop();
       }
@@ -258,20 +267,24 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  _image == null ? print("Imagen null") : print('Algo aqui');
-
-                  _imageService.showSelectPhotoOptions(context, (source) async {
-                    File? selectedImage =
-                        await _imageService.selectImage(context, source, (img) {
-                      setState(() {
-                        _image = img;
-                        Navigator.of(context).pop();
+                  if (!widget.notEmailLogin) {
+                    _imageService.showSelectPhotoOptions(context,
+                        (source) async {
+                      File? selectedImage = await _imageService
+                          .selectImage(context, source, (img) {
+                        setState(() {
+                          _image = img;
+                          Navigator.of(context).pop();
+                        });
                       });
-                      _image == null
-                          ? print("Imagen null")
-                          : print('Algo aqui');
                     });
-                  });
+                  } else {
+                    if (context.mounted) {
+                      showSnackBar(
+                          context: context,
+                          content: "Opción solo disponible con email");
+                    }
+                  }
                 },
                 child: _image == null
                     ? CircleAvatar(
@@ -293,16 +306,24 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                 left: 80,
                 child: IconButton(
                   onPressed: () {
-                    _imageService.showSelectPhotoOptions(context,
-                        (source) async {
-                      File? selectedImage = await _imageService
-                          .selectImage(context, source, (img) {
-                        setState(() {
-                          _image = img;
-                          Navigator.of(context).pop();
+                    if (!widget.notEmailLogin) {
+                      _imageService.showSelectPhotoOptions(context,
+                          (source) async {
+                        File? selectedImage = await _imageService
+                            .selectImage(context, source, (img) {
+                          setState(() {
+                            _image = img;
+                            Navigator.of(context).pop();
+                          });
                         });
                       });
-                    });
+                    } else {
+                      if (context.mounted) {
+                        showSnackBar(
+                            context: context,
+                            content: "Opción solo disponible con email");
+                      }
+                    }
                   },
                   icon: const Icon(Icons.add_a_photo),
                 ),
