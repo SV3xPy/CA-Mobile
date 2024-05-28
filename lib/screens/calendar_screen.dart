@@ -67,7 +67,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
           future: events,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              print("Estoy aquí.");
               List<EventModel> events = snapshot.data!;
               return SfCalendar(
                 view: CalendarView.month,
@@ -114,7 +113,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
               print("$snapshot");
               return ErrorScreen(error: "${snapshot.error}");
             }
-            print("Estoy aquí 2");
             return const Loader();
           },
         ),

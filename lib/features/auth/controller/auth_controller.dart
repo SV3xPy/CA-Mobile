@@ -3,8 +3,10 @@ import 'package:ca_mobile/features/auth/repository/auth_repository.dart';
 import 'package:ca_mobile/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:riverpod/riverpod.dart';
 import 'dart:convert';
+// ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
 final authControllerProvider = Provider((ref) {

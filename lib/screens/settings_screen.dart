@@ -168,7 +168,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               ],
             );
           });
-      print("El usuario no es premium");
       // Opcionalmente, puedes revertir el cambio del switch
       // ref.read(tSwitchProvider.notifier).state =!value;
     }
@@ -576,7 +575,60 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 containedInkWell: true,
                 highlightShape: BoxShape.rectangle,
                 highlightColor: Colors.transparent,
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: bgDialog,
+                          title:  Text("Preferencias Notificaciones",style: TextStyle(color: txtColor)),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                title: Text('Opcion A',style: TextStyle(color: txtColor),),
+                                onTap: () {
+                                  //Navigator.of(context).pop();
+                                },
+                                trailing: Switch(
+                                  value: tSwitchProvider,
+                                  onChanged: (value) {
+                                    //handleSwitchChange(value);
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                ),
+                              ),
+                              ListTile(
+                                title:  Text('Opcion B',style: TextStyle(color: txtColor)),
+                                onTap: () {
+                                  //Navigator.of(context).pop();
+                                },
+                                trailing: Switch(
+                                  value: tSwitchProvider,
+                                  onChanged: (value) {
+                                    //handleSwitchChange(value);
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text('Opcion C',style: TextStyle(color: txtColor)),
+                                onTap: () {
+                                  //Navigator.of(context).pop();
+                                },
+                                trailing: Switch(
+                                  value: tSwitchProvider,
+                                  onChanged: (value) {
+                                    //handleSwitchChange(value);
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                },
                 child: ListTile(
                   leading: Padding(
                     padding: const EdgeInsets.only(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/features/auth/screens/select_photo_options_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +22,7 @@ class ImageService {
       onImageSelected(img);
       return img;
     } on PlatformException catch (e) {
-      print(e);
+      showSnackBar(content: e.message!);
       return null;
     }
   }

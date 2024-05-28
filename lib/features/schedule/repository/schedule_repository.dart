@@ -138,7 +138,9 @@ class ScheduleRepository {
               ),
               (route) => false));
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      if (context.mounted) {
+        showSnackBar(context: context, content: e.toString());
+      }
     }
   }
 }

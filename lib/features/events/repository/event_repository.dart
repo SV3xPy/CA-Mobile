@@ -86,7 +86,18 @@ class EventRepository {
     return events;
   }
 
-  Future<void> deleteEvent() async {}
+  Future<void> deleteEvent(String eventId) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser?.uid)
+          .collection('events')
+          .doc(eventId)
+          .delete();
+    } catch (e) {
+      showSnackBar(content: e.toString());
+    }
+  }
 
   Future<List<EventModel>> getAllEventsData() async {
     String? uid = auth.currentUser?.uid;
@@ -146,6 +157,52 @@ class EventRepository {
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context: context, content: e.toString());
+      }
+    }
+  }
+
+  void updateEventData({
+    required String title,
+    required DateTime from,
+    required DateTime to,
+    required String subject,
+    required String description,
+    required String type,
+    required String color,
+    required ProviderRef ref,
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      var eventm = EventModel(
+          title: title,
+          description: description,
+          from: from,
+          to: to,
+          type: type,
+          subject: subject,
+          isDone: false,
+          color: color,
+          id: id);
+      await firestore
+          .collection('users')
+          .doc(uid)
+          .collection('events')
+          .doc(id)
+          .update(eventm.toMap())
+          .then((value) => Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavigation(
+                  initialTabIndex: 2,
+                ),
+              ),
+              (route) => false));
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(
+            context: context, content: e.toString()); // Manejo de errores
       }
     }
   }

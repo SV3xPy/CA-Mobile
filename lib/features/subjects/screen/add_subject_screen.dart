@@ -1,3 +1,4 @@
+import 'package:ca_mobile/common/utils/utils.dart';
 import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/subject_model.dart';
@@ -53,7 +54,7 @@ class _AddSubjectScreenState extends ConsumerState<AddSubjectScreen>
           color = data?.color?? Colors.black;
         });
       } catch (e) {
-        print('Error loading subject data: $e');
+        showSnackBar(content: e.toString());
       }
     }
   }
