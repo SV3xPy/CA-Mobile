@@ -178,7 +178,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     BottomNavigation.routeName,
                                   );
                                 } else {
-                                  print("Error al iniciar sesion.");
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -248,7 +247,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                   );
                                 } else {
-                                  print("Error al iniciar sesion.");
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -280,7 +278,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                   );
                                 } else {
-                                  print('error al iniciar sesion');
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -313,7 +310,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                   );
                                 } else {
-                                  print('error al iniciar sesion');
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
