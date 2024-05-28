@@ -67,6 +67,7 @@ class _TasksWidgetState extends ConsumerState<TasksWidget>
             ),
             appointmentBuilder: (context, calendarAppointmentDetails) {
               final event = calendarAppointmentDetails.appointments.first;
+              
               return Container(
                 width: calendarAppointmentDetails.bounds.width,
                 height: calendarAppointmentDetails.bounds.height,

@@ -327,6 +327,8 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final datetimeBorder =
         tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
+    final bgDialog =
+        tSwitchProvider ? const Color(0xFF12171D) : const Color(0xffede8e2);
     fromDayController.text = Utils.toDate(fromDate);
     fromHourController.text = Utils.toTime(fromDate);
     toHourController.text = Utils.toTime(toDate);
@@ -571,74 +573,6 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                             ),
                           ],
                         )
-                        // Row(
-                        //   children: [
-                        //     Expanded(
-                        //       flex: 1,
-                        //       child: Container(
-                        //         decoration: BoxDecoration(
-                        //           border: Border.all(
-                        //             color: datetimeBorder,
-                        //             width: 1,
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(
-                        //             10,
-                        //           ),
-                        //         ),
-                        //         child: ListTile(
-                        //           title: Text(
-                        //             Utils.toDate(fromDate),
-                        //             style: TextStyle(
-                        //               color: txtColor,
-                        //             ),
-                        //           ),
-                        //           leading: Icon(
-                        //             Icons.calendar_month,
-                        //             color: iconColor,
-                        //           ),
-                        //           onTap: () {
-                        //             pickFromDateTime(
-                        //                 pickDate: true, theme: tSwitchProvider);
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(
-                        //       width: 12,
-                        //     ),
-                        //     Expanded(
-                        //       child: Container(
-                        //         decoration: BoxDecoration(
-                        //           border: Border.all(
-                        //             color: datetimeBorder,
-                        //             width: 1,
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(
-                        //             10,
-                        //           ),
-                        //         ),
-                        //         child: ListTile(
-                        //           title: Text(
-                        //             Utils.toTime(fromDate),
-                        //             style: TextStyle(
-                        //               color: txtColor,
-                        //             ),
-                        //           ),
-                        //           leading: Icon(
-                        //             Icons.timer_outlined,
-                        //             color: iconColor,
-                        //           ),
-                        //           onTap: () {
-                        //             pickFromDateTime(
-                        //               pickDate: false,
-                        //               theme: tSwitchProvider,
-                        //             );
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                       ],
                     ),
                     const SizedBox(
@@ -735,76 +669,6 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                             ),
                           ],
                         ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //   children: [
-                        //     Expanded(
-                        //       flex: 1,
-                        //       child: Container(
-                        //         decoration: BoxDecoration(
-                        //           border: Border.all(
-                        //             color: datetimeBorder,
-                        //             width: 1,
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(
-                        //             10,
-                        //           ),
-                        //         ),
-                        //         child: ListTile(
-                        //           title: Text(
-                        //             Utils.toDate(toDate),
-                        //             style: TextStyle(
-                        //               color: txtColor,
-                        //             ),
-                        //           ),
-                        //           leading: Icon(
-                        //             Icons.calendar_month,
-                        //             color: iconColor,
-                        //           ),
-                        //           onTap: () {
-                        //             pickToDateTime(
-                        //               pickDate: true,
-                        //               theme: tSwitchProvider,
-                        //             );
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(
-                        //       width: 12,
-                        //     ),
-                        //     Expanded(
-                        //       child: Container(
-                        //         decoration: BoxDecoration(
-                        //           border: Border.all(
-                        //             color: datetimeBorder,
-                        //             width: 1,
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(
-                        //             10,
-                        //           ),
-                        //         ),
-                        //         child: ListTile(
-                        //           title: Text(
-                        //             Utils.toTime(toDate),
-                        //             style: TextStyle(
-                        //               color: txtColor,
-                        //             ),
-                        //           ),
-                        //           leading: Icon(
-                        //             Icons.timer_outlined,
-                        //             color: iconColor,
-                        //           ),
-                        //           onTap: () {
-                        //             pickToDateTime(
-                        //                 pickDate: false,
-                        //                 theme: tSwitchProvider);
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         const SizedBox(
                           height: 25.0,
                         ),
@@ -827,7 +691,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                             ),
                           ),
                           onTap: () {
-                            _dialogBuilder(bgColor, txtColor);
+                            _dialogBuilder(bgDialog, txtColor);
                           },
                         ),
                         const SizedBox(
