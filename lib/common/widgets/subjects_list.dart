@@ -168,11 +168,18 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                                   const SizedBox(
                                     width: 10.0,
                                   ),
-                                  Text(
-                                    subject[index].teacherName,
-                                    style: TextStyle(
-                                      color: txtColor,
-                                      fontSize: 15.0,
+                                  SizedBox(
+                                    width: 200,
+                                    child: AutoSizeText(
+                                      subject[index].teacherName,
+                                      style: TextStyle(
+                                        color: txtColor,
+                                        fontSize: 15.0,
+                                      ),
+                                      maxLines: 1,
+                                      minFontSize:
+                                          12, // Establece el tamaño mínimo del texto
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],

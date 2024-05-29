@@ -71,8 +71,6 @@ dependencies:
   flutter_paypal_payment: ^1.0.0
   firebase_analytics: ^10.10.7
 
-
-  
 dev_dependencies:
   flutter_test:
     sdk: flutter
