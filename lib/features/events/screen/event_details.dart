@@ -153,7 +153,7 @@ class EventDetailsScreen extends ConsumerWidget {
                       ),
                       child: const Text('Cancelar'),
                       onPressed: () {
-                        Navigator.of(context).pop;
+                        Navigator.of(context).pop();
                       },
                     ),
                     TextButton(

@@ -12,16 +12,12 @@ class FirebaseCM {
     );
   }
 
-  Future<void> subscribeToTopics(List<String> topics) async {
-    for (var topic in topics) {
+  Future<void> subscribeToTopics(String topic) async {
       await _firebaseMessaging.subscribeToTopic(topic);
-    }
   }
 
-  Future<void> unsubscribeFromTopics(List<String> topics) async {
-    for (var topic in topics) {
+  Future<void> unsubscribeFromTopics(String topic) async {
       await _firebaseMessaging.unsubscribeFromTopic(topic);
-    }
   }
 
   Future<void> initNotifications() async {
