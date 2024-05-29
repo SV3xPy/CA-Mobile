@@ -61,6 +61,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const AddEventScreen(),
       );
+    case AddEventScreen.routeNameUpdate:
+      final event = settings.arguments as EventModel;
+      return MaterialPageRoute(
+        builder: (context) => AddEventScreen(event: event),
+      );
     case AddSubjectScreen.routeName:
       final subjectId = settings.arguments as String?;
       return MaterialPageRoute(
@@ -71,6 +76,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AddScheduleScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const AddScheduleScreen(),
+      );
+    case AddScheduleScreen.routeNameUpdate:
+      final schedule = settings.arguments as ScheduleModel;
+      return MaterialPageRoute(
+        builder: (context) => AddScheduleScreen(
+          schedule: schedule,
+        ),
       );
     case EventDetailsScreen.routeName:
       final event = settings.arguments as EventModel;

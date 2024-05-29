@@ -1,3 +1,7 @@
+import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
+import 'package:ca_mobile/features/events/controller/event_controller.dart';
+import 'package:ca_mobile/features/events/screen/add_event_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +24,7 @@ class EventDetailsScreen extends ConsumerWidget {
         title: const Text("Detalles"),
         leading: const CloseButton(),
         actions: buildViewingActions(
+          ref,
           context,
           event,
           iconColor,
@@ -115,20 +120,63 @@ class EventDetailsScreen extends ConsumerWidget {
   }
 
   List<Widget> buildViewingActions(
+    WidgetRef ref,
     BuildContext context,
     EventModel event,
     Color iconColor,
   ) {
     return [
       IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            AddEventScreen.routeNameUpdate,
+            arguments: event,
+          );
+        },
         icon: Icon(
           Icons.edit,
           color: iconColor,
         ),
       ),
       IconButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("¿Estas seguro?"),
+                  content: const Text("Esta accion no se puede revertir"),
+                  actions: <Widget>[
+                    TextButton(
+                      style: const ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(tabColor),
+                      ),
+                      child: const Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      style: const ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(tabColor),
+                      ),
+                      child: const Text('Confirmar'),
+                      onPressed: () {
+                        ref.read(eventControllerProvider).deleteEvent(event.id);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BottomNavigation(
+                                initialTabIndex: 1,
+                              ),
+                            ),
+                            (route) => false);
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
         icon: Icon(
           Icons.delete,
           color: iconColor,

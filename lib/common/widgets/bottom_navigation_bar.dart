@@ -216,13 +216,6 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation>
               ),
               label: '',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.comment,
-                size: 35.0,
-              ),
-              label: '',
-            ),
           ],
         ),
       ),

@@ -3,8 +3,10 @@ import 'package:ca_mobile/features/auth/repository/auth_repository.dart';
 import 'package:ca_mobile/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:riverpod/riverpod.dart';
 import 'dart:convert';
+// ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
 final authControllerProvider = Provider((ref) {
@@ -83,14 +85,17 @@ class AuthController {
         ref: ref,
         context: context);
   }
-  void updateUserDataNOIMGToFirebase(BuildContext context, String name, String lastName, String birthDay){
-        authRepository.updateUserNoIMGData(
+
+  void updateUserDataNOIMGToFirebase(
+      BuildContext context, String name, String lastName, String birthDay) {
+    authRepository.updateUserNoIMGData(
         name: name,
         lastName: lastName,
         birthDay: birthDay,
         ref: ref,
         context: context);
   }
+
   void updateUserDataToFirebase(BuildContext context, String name,
       File? profilePic, String lastName, String birthDay) {
     authRepository.updateUserData(
@@ -104,6 +109,14 @@ class AuthController {
 
   Future<void> signOut() async {
     await authRepository.signOut();
+  }
+
+  Future<bool> checkIsPremium(String id) async {
+    return authRepository.checkIsPremium(id);
+  }
+
+  void setPremium() async {
+    authRepository.setPremium();
   }
 
   Stream<UserModel> userDataById(String userId) {

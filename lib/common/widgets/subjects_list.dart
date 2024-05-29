@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ca_mobile/common/widgets/loader.dart';
 import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/subjects/screen/add_subject_screen.dart';
@@ -5,6 +6,7 @@ import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/subject_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum Options {
@@ -140,11 +142,17 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                subject[index].subject,
-                                style: TextStyle(
-                                  color: txtColor,
-                                  fontSize: 18.0,
+                              Expanded(
+                                child: AutoSizeText(
+                                  subject[index].subject,
+                                  style: TextStyle(
+                                    color: txtColor,
+                                    fontSize: 18.0,
+                                  ),
+                                  maxLines: 1,
+                                  minFontSize:
+                                      12, // Establece el tamaño mínimo del texto
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               const SizedBox(
@@ -160,11 +168,18 @@ class _SubjectsListState extends ConsumerState<SubjectsList>
                                   const SizedBox(
                                     width: 10.0,
                                   ),
-                                  Text(
-                                    subject[index].teacherName,
-                                    style: TextStyle(
-                                      color: txtColor,
-                                      fontSize: 15.0,
+                                  SizedBox(
+                                    width: 200,
+                                    child: AutoSizeText(
+                                      subject[index].teacherName,
+                                      style: TextStyle(
+                                        color: txtColor,
+                                        fontSize: 15.0,
+                                      ),
+                                      maxLines: 1,
+                                      minFontSize:
+                                          12, // Establece el tamaño mínimo del texto
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],

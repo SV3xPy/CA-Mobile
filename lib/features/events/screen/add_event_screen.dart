@@ -10,6 +10,7 @@ import 'package:ca_mobile/features/events/controller/event_controller.dart';
 
 class AddEventScreen extends ConsumerStatefulWidget {
   static const routeName = '/add_event';
+  static const routeNameUpdate = '/add_event_update';
   final EventModel? event;
   const AddEventScreen({super.key, this.event});
 
@@ -32,6 +33,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
   String? _selectedSubject = "-----";
   String? _selectedType = "-----";
   int _selectedStatusID = -1;
+
   List<String> eventType = [
     "Tarea",
     "Examen",
@@ -41,6 +43,7 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
   @override
   void initState() {
     super.initState();
+    print(widget.event?.id);
     if (widget.event == null) {
       fromDate = DateTime.now();
       toDate = DateTime.now().add(
@@ -48,6 +51,13 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
           hours: 2,
         ),
       );
+    } else {
+      fromDate = widget.event!.from;
+      toDate = widget.event!.to;
+      eventTitleController.text = widget.event!.title;
+      descriptionController.text = widget.event!.description;
+      subjectController.text = widget.event!.subject;
+      typeController.text = widget.event!.type;
     }
     WidgetsBinding.instance.addObserver(this);
   }
@@ -169,6 +179,28 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
     }
   }
 
+  void updateEventData() async {
+    String title = eventTitleController.text.trim();
+    fromDate;
+    toDate;
+    String subject = subjectController.text.trim();
+    String type = typeController.text.trim();
+    String color = 'FFFFFF';
+    String description = descriptionController.text.trim();
+    if (title.isNotEmpty) {
+      ref.read(eventControllerProvider).updateEventDataToFirebase(
+          context,
+          title,
+          fromDate,
+          toDate,
+          subject,
+          description,
+          type,
+          color,
+          widget.event!.id);
+    }
+  }
+
   Future dummy() async {}
 
   @override
@@ -194,8 +226,8 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
         tSwitchProvider ? const Color(0xFFBE9020) : Colors.black12;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Nuevo evento",
+        title: Text(
+          widget.event == null ? "Nuevo evento" : 'Actualizar evento',
         ),
       ),
       body: SingleChildScrollView(
@@ -574,10 +606,14 @@ class _AddEventScreenState extends ConsumerState<AddEventScreen>
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          storeEventData();
+                          if (widget.event == null) {
+                            storeEventData();
+                          } else {
+                            updateEventData();
+                          }
                         },
-                        child: const Text(
-                          "Guardar",
+                        child: Text(
+                          widget.event == null ? "Guardar" : 'Actualizar',
                         ),
                       ),
                     ),

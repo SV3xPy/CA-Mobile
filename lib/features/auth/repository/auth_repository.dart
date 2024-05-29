@@ -4,7 +4,6 @@ import 'package:ca_mobile/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -105,7 +104,7 @@ class AuthRepository {
       if (context.mounted) {
         showSnackBar(context: context, content: e.message!);
       }
-          rethrow;
+      rethrow;
     }
   }
 
@@ -359,6 +358,21 @@ class AuthRepository {
             event.data()!,
           ),
         );
+  }
+
+  Future<bool> checkIsPremium(String uid) async {
+    var userData = await firestore.collection('users').doc(uid).get();
+    UserModel? user;
+    if (userData.data() != null) {
+      user = UserModel.fromMap(userData.data()!);
+    }
+    bool isPremium = userData['isPremium'] ?? false;
+    return isPremium;
+  }
+
+  void setPremium() async {
+    String uid = auth.currentUser!.uid;
+    await firestore.collection('users').doc(uid).update({'isPremium': true});
   }
 
   Future<bool> resetPassword(String email) async {

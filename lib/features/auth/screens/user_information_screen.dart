@@ -65,7 +65,6 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   Future<void> _loadProviderUserData() async {
     final prefs = await SharedPreferences.getInstance();
     String loginType = prefs.getString('loginType') ?? 'default';
-    print(loginType);
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       for (var info in user.providerData) {
@@ -159,6 +158,7 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
       });
     } on PlatformException catch (e) {
       if (mounted) {
+        showSnackBar(content: e.toString());
         Navigator.of(context).pop();
       }
     }
