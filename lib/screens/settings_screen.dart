@@ -725,6 +725,73 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       color: iconColor,
                     ),
                   ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          backgroundColor: bgDialog,
+                          title: Text(
+                            "Acerca De",
+                            style: TextStyle(
+                              color: txtColor,
+                            ),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "App creada por:",
+                                style: TextStyle(
+                                  color: txtColor,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    color: iconColor,
+                                  ),
+                                  Text(
+                                    "Anthony Gómez Cabañas",
+                                    style: TextStyle(
+                                      color: txtColor,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    color: iconColor,
+                                  ),
+                                  Text(
+                                    "Cristhian Ortega Hernández",
+                                    style: TextStyle(
+                                      color: txtColor,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                   title: Text(
                     "Acerca De",
                     style: TextStyle(

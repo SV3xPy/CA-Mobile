@@ -34,7 +34,8 @@ class FirebaseCM {
 
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
-    //final fCMToken = await _firebaseMessaging.getToken();
+    final fCMToken = await _firebaseMessaging.getToken();
+    print("$fCMToken");
     initPushNotifications();
   }
 }

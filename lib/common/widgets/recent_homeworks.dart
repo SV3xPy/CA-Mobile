@@ -1,3 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:ca_mobile/common/widgets/error.dart';
+import 'package:ca_mobile/common/widgets/loader.dart';
+import 'package:ca_mobile/features/subjects/controller/subject_controller.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/event_model.dart';
 import 'package:flutter/material.dart';
@@ -35,83 +39,111 @@ class _RecentHomeworksState extends ConsumerState<RecentHomeworks>
     final txtColor = tSwitchProvider ? Colors.white : Colors.black;
     final bgContainer =
         tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: 2, //recentEvents.length,
-      itemBuilder: (
-        BuildContext context,
-        int index,
-      ) {
-        //Event event = recentEvents[index];
-        return Row(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(
-                  bottom: 30.0,
-                ),
-                padding: const EdgeInsets.fromLTRB(
-                  20.0,
-                  20.0,
-                  10.0,
-                  10.0,
-                ),
-                height: 100.0,
-                width: 341.0,
-                decoration: BoxDecoration(
-                  color: bgContainer,
-                  borderRadius: BorderRadius.circular(
-                    12.0,
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          //event.title,
-                          "",
-                          style: TextStyle(
-                            color: txtColor,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                          ),
+    return FutureBuilder(
+      future: ref.read(subjectControllerProvider).getAllSubjectData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length, //recentEvents.length,
+            itemBuilder: (
+              BuildContext context,
+              int index,
+            ) {
+              final subject = snapshot.data![index];
+              return Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        bottom: 30.0,
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        20.0,
+                        20.0,
+                        10.0,
+                        10.0,
+                      ),
+                      height: 100.0,
+                      width: 341.0,
+                      decoration: BoxDecoration(
+                        color: bgContainer,
+                        borderRadius: BorderRadius.circular(
+                          12.0,
                         ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.access_time,
-                              color: iconColor,
-                              size: 17.0,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              "", //,${DateTime.now().weekday == event.dueTime.weekday ? "Hoy" : DateFormat.EEEE().format(event.dueTime)}, ${dateFormat.format(event.dueTime)}",
-                              style: TextStyle(
-                                color: txtColor,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: SizedBox(
+                                  width: 250,
+                                  child: AutoSizeText(
+                                    subject.subject,
+                                    style: TextStyle(
+                                      color: txtColor,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 1,
+                                    minFontSize:
+                                        12, // Establece el tamaño mínimo del texto
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(
+                                height: 15.0,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.person,
+                                    color: iconColor,
+                                    size: 17.0,
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: AutoSizeText(
+                                      subject
+                                          .teacherName, //,${DateTime.now().weekday == event.dueTime.weekday ? "Hoy" : DateFormat.EEEE().format(event.dueTime)}, ${dateFormat.format(event.dueTime)}",
+                                      style: TextStyle(
+                                        color: txtColor,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      maxLines: 1,
+                                      minFontSize:
+                                          12, // Establece el tamaño mínimo del texto
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          //_todoButton(event, iconColor)
+                        ],
+                      ),
                     ),
-                    //_todoButton(event, iconColor)
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return ErrorScreen(
+            error: "${snapshot.error}",
+          );
+        }
+        return const Loader();
       },
     );
   }

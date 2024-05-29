@@ -53,39 +53,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       body: ListView(
         children: <Widget>[
           const Header(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30.0,
-            ),
-            child: TextField(
-              style: TextStyle(
-                color: txtColor,
-              ),
-              cursorColor: txtColor,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: bgContainer,
-                filled: true,
-                hintText: "Buscar",
-                hintStyle: TextStyle(
-                  color: txtColor,
-                ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: iconColor,
-                  size: 26.0,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    30.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 30.0,
+          //   ),
+          //   child: TextField(
+          //     style: TextStyle(
+          //       color: txtColor,
+          //     ),
+          //     cursorColor: txtColor,
+          //     decoration: InputDecoration(
+          //       border: InputBorder.none,
+          //       fillColor: bgContainer,
+          //       filled: true,
+          //       hintText: "Buscar",
+          //       hintStyle: TextStyle(
+          //         color: txtColor,
+          //       ),
+          //       prefixIcon: Icon(
+          //         Icons.search,
+          //         color: iconColor,
+          //         size: 26.0,
+          //       ),
+          //       enabledBorder: OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(
+          //           30.0,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 30.0,
+          // ),
           Container(
             // padding: const EdgeInsets.all(
             //   35.0,
@@ -117,15 +117,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   height: 30.0,
                 ),
                 const RecentAlerts(),
-                Center(
-                  child: Text(
-                    "Ver todos",
-                    style: TextStyle(
-                      color: iconColor,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
+                // Center(
+                //   child: Text(
+                //     "Ver todos",
+                //     style: TextStyle(
+                //       color: iconColor,
+                //       fontSize: 15.0,
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20.0,
                 ),
@@ -141,15 +141,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   height: 30,
                 ),
                 const RecentHomeworks(),
-                Center(
-                  child: Text(
-                    "Ver todos",
-                    style: TextStyle(
-                      color: iconColor,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
+                // Center(
+                //   child: Text(
+                //     "Ver todos",
+                //     style: TextStyle(
+                //       color: iconColor,
+                //       fontSize: 15.0,
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 30.0,
                 ),
