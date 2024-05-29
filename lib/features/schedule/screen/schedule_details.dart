@@ -1,3 +1,7 @@
+import 'package:ca_mobile/colors.dart';
+import 'package:ca_mobile/common/widgets/bottom_navigation_bar.dart';
+import 'package:ca_mobile/features/schedule/controller/schedule_controller.dart';
+import 'package:ca_mobile/features/schedule/screen/add_schedule_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
 import 'package:ca_mobile/models/schedule_model.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +40,7 @@ class ScheduleDetailsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Detalles"),
         leading: const CloseButton(),
-        actions: buildViewingActions(
-          context,
-          schedule,
-          iconColor,
-        ),
+        actions: buildViewingActions(context, schedule, iconColor, ref),
       ),
       body: ListView(
         padding: const EdgeInsets.all(32),
@@ -153,17 +153,62 @@ class ScheduleDetailsScreen extends ConsumerWidget {
     BuildContext context,
     ScheduleModel schedule,
     Color iconColor,
+    WidgetRef ref,
   ) {
     return [
       IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            AddScheduleScreen.routeNameUpdate,
+            arguments: schedule,
+          );
+        },
         icon: Icon(
           Icons.edit,
           color: iconColor,
         ),
       ),
       IconButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("¿Estas seguro?"),
+                  content: const Text("Esta accion no se puede revertir"),
+                  actions: <Widget>[
+                    TextButton(
+                      style: const ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(tabColor),
+                      ),
+                      child: const Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      style: const ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(tabColor),
+                      ),
+                      child: const Text('Confirmar'),
+                      onPressed: () {
+                        ref
+                            .read(scheduleControllerProvider)
+                            .deleteSchedule(schedule.id);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BottomNavigation(
+                                initialTabIndex: 1,
+                              ),
+                            ),
+                            (route) => false);
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
         icon: Icon(
           Icons.delete,
           color: iconColor,

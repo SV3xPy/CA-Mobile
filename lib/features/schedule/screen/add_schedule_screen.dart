@@ -10,9 +10,12 @@ import 'package:ca_mobile/models/subject_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AddScheduleScreen extends ConsumerStatefulWidget {
   static const routeName = '/add_schedule';
+  static const routeNameUpdate = '/add_schedule_update';
   final ScheduleModel? schedule;
   const AddScheduleScreen({super.key, this.schedule});
 
@@ -31,6 +34,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
   final untilDayController = TextEditingController();
   final untilHourController = TextEditingController();
   final daysController = TextEditingController();
+
   String? _selectedSubject = "-----";
   String? _noDays = "-----";
   List<String> _selectedDays = [];
@@ -50,6 +54,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
     "Sábado",
     "Domingo",
   ];
+
   final Map<String, String> _daysMap = {
     "Lunes": "MO",
     "Martes": "TU",
@@ -73,8 +78,40 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
       untilDate = DateTime.now().add(
         const Duration(days: 1),
       );
+      print('SIN PARAMETROS');
+    } else {
+      RecurrenceProperties recProp = SfCalendar.parseRRule(
+          widget.schedule!.recurrenceRule, widget.schedule!.from);
+      fromDate = widget.schedule!.from;
+      toDate = widget.schedule!.to;
+      untilDate = recProp.endDate ?? DateTime.now();
+      subjectController.text = widget.schedule!.subject;
+      classroomController.text = widget.schedule!.classroom;
+      final selectedDaysFromRrule = parseByDay(widget.schedule!.recurrenceRule);
+      setState(() {
+        _selectedDays = selectedDaysFromRrule;
+        // Actualiza el texto en daysController para reflejar los días seleccionados
+        daysController.text = _selectedDays.join(', ');
+      });
     }
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  List<String> parseByDay(String rrule) {
+    final Map<String, String> _inverseDaysMap = {
+      for (var entry in _daysMap.entries) entry.value: entry.key,
+    };
+    final pattern = RegExp(r'BYDAY=(.*?)(;|$)');
+    final match = pattern.firstMatch(rrule);
+    if (match != null && match.groupCount >= 1) {
+      final daysStr = match.group(1)!;
+      return daysStr
+          .split(',')
+          .map((day) => _inverseDaysMap[day.toUpperCase()] ?? '')
+          .where((day) => day.isNotEmpty)
+          .toList();
+    }
+    return [];
   }
 
   @override
@@ -116,7 +153,7 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
 
     if (date == null) return;
 
-    final toDateAdjusted = date.add(Duration(hours: 2));
+    final toDateAdjusted = date.add(const Duration(hours: 2));
 
     if (date.isAfter(untilDate)) {
       untilDate = DateTime(
@@ -319,6 +356,18 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
     }
   }
 
+  void updateScheduleData() async {
+    fromDate;
+    toDate;
+    String subject = subjectController.text.trim();
+    String classroom = classroomController.text.trim();
+    String id = widget.schedule!.id;
+    if (subject.isNotEmpty) {
+      ref.read(scheduleControllerProvider).updateSubjectDataToFirebase(
+          context, subject, fromDate, toDate, classroom, recurrenceRule!, id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final tSwitchProvider = ref.watch(themeSwitchProvider);
@@ -336,8 +385,8 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
     untilHourController.text = Utils.toTime(untilDate);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Nuevo horario",
+        title: Text(
+          widget.schedule == null ? "Nueva horario" : 'Actualizar horario',
         ),
       ),
       body: SingleChildScrollView(
@@ -712,14 +761,14 @@ class _AddScheduleScreenState extends ConsumerState<AddScheduleScreen>
                               // print(byDay);
                               // print(toDate);
                               // print(until);
-                              print(recurrenceRule);
-                              print(fromDate);
-                              print(toDate);
-                              print(untilDate);
-                              storeScheduleData();
+                              widget.schedule == null
+                                  ? storeScheduleData()
+                                  : updateScheduleData();
                             },
-                            child: const Text(
-                              "Guardar",
+                            child: Text(
+                              widget.schedule == null
+                                  ? "Guardar"
+                                  : 'Actualizar',
                             ),
                           ),
                         ),
