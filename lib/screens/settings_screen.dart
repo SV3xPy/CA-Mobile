@@ -8,6 +8,7 @@ import 'package:ca_mobile/features/auth/controller/auth_controller.dart';
 import 'package:ca_mobile/common/widgets/image_selector.dart';
 import 'package:ca_mobile/features/auth/screens/options_screen.dart';
 import 'package:ca_mobile/features/theme/provider/theme_provider.dart';
+import 'package:ca_mobile/firebase_messaging.dart';
 import 'package:ca_mobile/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   final ImageService _imageService = ImageService();
   String loginType = "";
   bool isPremium = false;
+  final FirebaseCM _firebaseCM = FirebaseCM();
+
+  bool inscSusc = false;
+  bool inscPrem = false;
+  bool inscNov = false;
+
   @override
   void initState() {
     super.initState();
@@ -448,6 +455,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     );
   }
 
+  void handleSubscription(String topic, bool subscribe) async {
+    if (subscribe) {
+      await _firebaseCM.subscribeToTopic(topic);
+      print("Te has suscrito a: $topic");
+    } else {
+      await _firebaseCM.unsubscribeFromTopic(topic);
+      print("Te has desuscrito de: $topic");
+    }
+
+    // setState(() {
+    //   if (topic == 'inscripcion') {
+    //     inscSusc = subscribe;
+    //   } else if (topic == 'promos') {
+    //     inscPrem = subscribe;
+    //   } else if (topic == 'novedades') {
+    //     inscNov = subscribe;
+    //   }
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -461,6 +488,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
         tSwitchProvider ? const Color(0xFF282B30) : const Color(0xffd7d4cf);
     final bgDialog =
         tSwitchProvider ? const Color(0xFF12171D) : const Color(0xffede8e2);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -579,53 +607,81 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: bgDialog,
-                          title:  Text("Preferencias Notificaciones",style: TextStyle(color: txtColor)),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                title: Text('Opcion A',style: TextStyle(color: txtColor),),
-                                onTap: () {
-                                  //Navigator.of(context).pop();
-                                },
-                                trailing: Switch(
-                                  value: tSwitchProvider,
-                                  onChanged: (value) {
-                                    //handleSwitchChange(value);
-                                  },
-                                  activeColor: Colors.orangeAccent,
-                                ),
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            return AlertDialog(
+                              backgroundColor: bgDialog,
+                              title: Text("Preferencias Notificaciones",
+                                  style: TextStyle(color: txtColor)),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Text(
+                                      'Inscripciones',
+                                      style: TextStyle(color: txtColor),
+                                    ),
+                                    onTap: () {
+                                      //Navigator.of(context).pop();
+                                    },
+                                    trailing: Switch(
+                                      value: inscSusc,
+                                      onChanged: (value) {
+                                        handleSubscription(
+                                          "inscripcion",
+                                          value,
+                                        );
+                                        setState(() {
+                                          inscSusc = value;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                    ),
+                                  ),
+                                  ListTile(
+                                    title: Text('Premium',
+                                        style: TextStyle(color: txtColor)),
+                                    onTap: () {
+                                      //Navigator.of(context).pop();
+                                    },
+                                    trailing: Switch(
+                                      value: inscPrem,
+                                      onChanged: (value) {
+                                        handleSubscription(
+                                          "promo",
+                                          value,
+                                        );
+                                        setState(() {
+                                          inscPrem = value;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                    ),
+                                  ),
+                                  ListTile(
+                                    title: Text('Novedades',
+                                        style: TextStyle(color: txtColor)),
+                                    onTap: () {
+                                      //Navigator.of(context).pop();
+                                    },
+                                    trailing: Switch(
+                                      value: inscNov,
+                                      onChanged: (value) {
+                                        handleSubscription(
+                                          "novedades",
+                                          value,
+                                        );
+                                        setState(() {
+                                          inscNov = value;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              ListTile(
-                                title:  Text('Opcion B',style: TextStyle(color: txtColor)),
-                                onTap: () {
-                                  //Navigator.of(context).pop();
-                                },
-                                trailing: Switch(
-                                  value: tSwitchProvider,
-                                  onChanged: (value) {
-                                    //handleSwitchChange(value);
-                                  },
-                                  activeColor: Colors.orangeAccent,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text('Opcion C',style: TextStyle(color: txtColor)),
-                                onTap: () {
-                                  //Navigator.of(context).pop();
-                                },
-                                trailing: Switch(
-                                  value: tSwitchProvider,
-                                  onChanged: (value) {
-                                    //handleSwitchChange(value);
-                                  },
-                                  activeColor: Colors.orangeAccent,
-                                ),
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         );
                       });
                 },
