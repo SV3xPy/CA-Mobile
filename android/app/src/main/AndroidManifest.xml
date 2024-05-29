@@ -31,6 +31,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <meta-data
+            android:name="com.google.firebase.default_notification_channel_id"
+            android:value="high_importance_channel"
+            />
         </activity>
           <!-- Agrega UCropActivity aquí -->
         <activity
